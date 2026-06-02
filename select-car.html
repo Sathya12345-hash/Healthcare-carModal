@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pick Your Car — AutoElite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a; --deep: #111214; --card: #161820; --border: #2a2d35;
+    --gold: #c9a84c; --gold-light: #e8c97a; --red: #e63946; --white: #f0eeea;
+    --muted: #7a7d85;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'Courier Prime', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--black); color: var(--white); font-family: var(--font-body); font-weight: 300; }
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 60px;
+    background: rgba(10,10,10,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: var(--font-display); font-size: 28px; letter-spacing: 4px; color: var(--gold); text-decoration: none; }
+  .nav-logo span { color: var(--white); }
+  nav ul { list-style: none; display: flex; gap: 36px; }
+  nav ul a { text-decoration: none; color: var(--muted); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; transition: color .2s; }
+  nav ul a:hover, nav ul a.active { color: var(--gold); }
+  .nav-cta { background: var(--gold) !important; color: var(--black) !important; padding: 10px 24px; border-radius: 2px; font-weight: 500 !important; }
+
+  main { padding: 120px 60px 80px; }
+  .page-tag { font-family: var(--font-mono); font-size: 11px; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+  h1 { font-family: var(--font-display); font-size: clamp(48px, 7vw, 90px); letter-spacing: 2px; line-height: 1; margin-bottom: 12px; }
+  .page-sub { color: var(--muted); font-size: 15px; max-width: 500px; line-height: 1.7; margin-bottom: 56px; }
+
+  /* STEPS */
+  .steps-bar {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 56px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 20px 32px;
+    border-radius: 2px;
+    max-width: 600px;
+  }
+  .step {
+    display: flex; align-items: center; gap: 10px;
+    flex: 1;
+  }
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    border: 2px solid var(--border);
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .step.active .step-num { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); }
+  .step.done .step-num { border-color: #4ade80; color: #4ade80; background: rgba(74,222,128,0.1); }
+  .step-label { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .step.active .step-label { color: var(--white); }
+  .step-arrow { color: var(--border); font-size: 20px; margin: 0 16px; flex-shrink: 0; }
+
+  /* CAR SELECTOR */
+  .select-row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 40px; }
+  .select-group { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 200px; }
+  .select-group label { font-family: var(--font-mono); font-size: 11px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; }
+  .select-group select, .select-group input {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 14px 18px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color .2s;
+    appearance: none;
+  }
+  .select-group select:focus, .select-group input:focus { border-color: var(--gold); }
+
+  /* CAR CARDS */
+  .cars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .car-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    padding: 28px;
+    cursor: pointer;
+    transition: all .25s;
+    border-radius: 4px;
+    position: relative;
+  }
+  .car-card:hover { border-color: var(--gold); }
+  .car-card.selected { border-color: var(--gold); background: #1c1d10; }
+  .car-card.selected::after {
+    content: '✓ SELECTED';
+    position: absolute; top: 16px; right: 16px;
+    background: var(--gold); color: var(--black);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
+    padding: 4px 10px; font-weight: 700;
+  }
+  .car-emoji { font-size: 48px; margin-bottom: 16px; display: block; }
+  .car-name { font-family: var(--font-display); font-size: 28px; letter-spacing: 1px; margin-bottom: 6px; }
+  .car-detail { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .car-reg {
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    border: 1px solid var(--border);
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 2px;
+  }
+  .car-last { margin-top: 8px; font-size: 11px; color: var(--muted); }
+
+  /* ACTIONS */
+  .action-row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--gold); color: var(--black);
+    padding: 16px 36px; text-decoration: none;
+    font-family: var(--font-mono); font-size: 13px; letter-spacing: 2px;
+    text-transform: uppercase; font-weight: 700;
+    transition: all .25s; border: 2px solid var(--gold);
+    cursor: pointer; border-radius: 2px;
+  }
+  .btn-primary:hover { background: transparent; color: var(--gold); }
+  .btn-ghost {
+    background: transparent; color: var(--muted);
+    padding: 16px 28px; border: 2px solid var(--border);
+    font-family: var(--font-mono); font-size: 13px; letter-spacing: 1px;
+    text-transform: uppercase; cursor: pointer; transition: all .25s; border-radius: 2px;
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  .add-car-form {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 36px;
+    border-radius: 4px;
+    margin-top: 40px;
+    display: none;
+  }
+  .add-car-form.open { display: block; }
+  .add-car-form h3 {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    color: var(--gold);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    nav ul { display: none; }
+    main { padding: 90px 24px 60px; }
+    .steps-bar { flex-wrap: wrap; gap: 12px; }
+    .step-arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">AUTO<span>ELITE</span></a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="select-car.html" class="active">Pick A Car</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="records.html">Records</a></li>
+    <li><a href="cart.html" class="nav-cta">🛒 Cart <span id="cart-count" style="background:var(--red);color:#fff;padding:2px 7px;border-radius:99px;font-size:11px;margin-left:4px;">0</span></a></li>
+  </ul>
+</nav>
+
+<main>
+  <p class="page-tag">// Step 1 of 3</p>
+  <h1>PICK YOUR<br><span style="color:var(--gold)">VEHICLE</span></h1>
+  <p class="page-sub">Select your registered vehicle or add a new one to begin booking a service.</p>
+
+  <!-- STEPS -->
+  <div class="steps-bar">
+    <div class="step active">
+      <div class="step-num">1</div>
+      <div class="step-label">Select Car</div>
+    </div>
+    <div class="step-arrow">›</div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-label">Choose Services</div>
+    </div>
+    <div class="step-arrow">›</div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-label">Checkout</div>
+    </div>
+  </div>
+
+  <!-- FILTER -->
+  <div class="select-row">
+    <div class="select-group">
+      <label>Filter by Make</label>
+      <select id="filter-make" onchange="filterCars()">
+        <option value="">All Makes</option>
+        <option>Toyota</option>
+        <option>Honda</option>
+        <option>BMW</option>
+        <option>Hyundai</option>
+        <option>Maruti Suzuki</option>
+        <option>Ford</option>
+      </select>
+    </div>
+    <div class="select-group">
+      <label>Search by Plate / Name</label>
+      <input type="text" id="filter-search" placeholder="e.g. TN09 or Camry" oninput="filterCars()">
+    </div>
+  </div>
+
+  <!-- CAR CARDS -->
+  <div class="cars-grid" id="cars-grid">
+    <!-- Populated by JS -->
+  </div>
+
+  <div class="action-row">
+    <button class="btn-primary" onclick="proceedToServices()">Next: Choose Services →</button>
+    <button class="btn-ghost" onclick="toggleAddCar()">+ Add New Vehicle</button>
+  </div>
+
+  <!-- ADD CAR FORM -->
+  <div class="add-car-form" id="add-car-form">
+    <h3>ADD NEW VEHICLE</h3>
+    <div class="select-row">
+      <div class="select-group">
+        <label>Make</label>
+        <select id="new-make">
+          <option>Toyota</option><option>Honda</option><option>BMW</option>
+          <option>Hyundai</option><option>Maruti Suzuki</option><option>Ford</option>
+          <option>Mercedes</option><option>Tata</option><option>Mahindra</option>
+        </select>
+      </div>
+      <div class="select-group">
+        <label>Model</label>
+        <input type="text" id="new-model" placeholder="e.g. Camry, Civic, X5">
+      </div>
+      <div class="select-group">
+        <label>Year</label>
+        <input type="number" id="new-year" placeholder="e.g. 2022" min="1990" max="2025">
+      </div>
+    </div>
+    <div class="select-row">
+      <div class="select-group">
+        <label>Registration Plate</label>
+        <input type="text" id="new-plate" placeholder="e.g. TN09 AB 1234" style="text-transform:uppercase;">
+      </div>
+      <div class="select-group">
+        <label>Color</label>
+        <input type="text" id="new-color" placeholder="e.g. Pearl White">
+      </div>
+      <div class="select-group">
+        <label>Fuel Type</label>
+        <select id="new-fuel">
+          <option>Petrol</option><option>Diesel</option><option>CNG</option>
+          <option>Electric</option><option>Hybrid</option>
+        </select>
+      </div>
+    </div>
+    <div class="action-row" style="margin-top:24px;">
+      <button class="btn-primary" onclick="addNewCar()">Add Vehicle</button>
+      <button class="btn-ghost" onclick="toggleAddCar()">Cancel</button>
+    </div>
+  </div>
+</main>
+
+<script>
+  const MAKES_EMOJI = { Toyota:'🚗', Honda:'🚙', BMW:'🏎️', Hyundai:'🚘', 'Maruti Suzuki':'🛻', Ford:'🚐', Mercedes:'🚀', Tata:'🚌', Mahindra:'🛺' };
+
+  const sampleCars = [
+    { id:1, make:'Toyota', model:'Camry', year:2021, plate:'TN09 AB 1234', color:'Pearl White', fuel:'Petrol', lastService:'29 May 2025', mileage:'42,500 km' },
+    { id:2, make:'Honda', model:'City', year:2019, plate:'TN07 CD 5678', color:'Midnight Black', fuel:'Petrol', lastService:'26 May 2025', mileage:'68,200 km' },
+    { id:3, make:'BMW', model:'3 Series', year:2022, plate:'TN01 EF 9012', color:'Alpine White', fuel:'Petrol', lastService:'28 May 2025', mileage:'21,000 km' },
+    { id:4, make:'Hyundai', model:'Creta', year:2020, plate:'TN22 GH 3456', color:'Fiery Red', fuel:'Diesel', lastService:'30 May 2025', mileage:'55,800 km' },
+    { id:5, make:'Maruti Suzuki', model:'Swift', year:2023, plate:'TN04 IJ 7890', color:'Speedy Blue', fuel:'Petrol', lastService:'14 May 2025', mileage:'12,300 km' },
+  ];
+
+  function getCars() {
+    const stored = localStorage.getItem('ae_cars');
+    if (stored) return JSON.parse(stored);
+    localStorage.setItem('ae_cars', JSON.stringify(sampleCars));
+    return sampleCars;
+  }
+
+  function saveCars(cars) { localStorage.setItem('ae_cars', JSON.stringify(cars)); }
+
+  function renderCars(cars) {
+    const selected = localStorage.getItem('ae_selected_car');
+    const grid = document.getElementById('cars-grid');
+    if (!cars.length) { grid.innerHTML = '<p style="color:var(--muted);font-family:var(--font-mono);">No vehicles found. Add one below.</p>'; return; }
+    grid.innerHTML = cars.map(car => `
+      <div class="car-card ${selected == car.id ? 'selected' : ''}" onclick="selectCar(${car.id})" data-id="${car.id}">
+        <span class="car-emoji">${MAKES_EMOJI[car.make] || '🚗'}</span>
+        <div class="car-name">${car.year} ${car.make} ${car.model}</div>
+        <div class="car-detail">${car.color} &bull; ${car.fuel}</div>
+        <div class="car-reg">${car.plate}</div>
+        <div class="car-last">Last service: ${car.lastService} &bull; ${car.mileage}</div>
+      </div>
+    `).join('');
+  }
+
+  function filterCars() {
+    const make = document.getElementById('filter-make').value.toLowerCase();
+    const search = document.getElementById('filter-search').value.toLowerCase();
+    const cars = getCars().filter(c => {
+      const matchMake = !make || c.make.toLowerCase() === make;
+      const matchSearch = !search || c.plate.toLowerCase().includes(search) || c.model.toLowerCase().includes(search);
+      return matchMake && matchSearch;
+    });
+    renderCars(cars);
+  }
+
+  function selectCar(id) {
+    localStorage.setItem('ae_selected_car', id);
+    document.querySelectorAll('.car-card').forEach(c => {
+      c.classList.toggle('selected', parseInt(c.dataset.id) === id);
+    });
+    const car = getCars().find(c => c.id === id);
+    if (car) localStorage.setItem('ae_selected_car_name', `${car.year} ${car.make} ${car.model}`);
+  }
+
+  function proceedToServices() {
+    const sel = localStorage.getItem('ae_selected_car');
+    if (!sel) { alert('Please select a vehicle first.'); return; }
+    window.location.href = 'services.html';
+  }
+
+  function toggleAddCar() {
+    document.getElementById('add-car-form').classList.toggle('open');
+  }
+
+  function addNewCar() {
+    const cars = getCars();
+    const newCar = {
+      id: Date.now(),
+      make: document.getElementById('new-make').value,
+      model: document.getElementById('new-model').value || 'Unknown',
+      year: parseInt(document.getElementById('new-year').value) || 2024,
+      plate: document.getElementById('new-plate').value.toUpperCase() || 'XX00 XX 0000',
+      color: document.getElementById('new-color').value || 'Silver',
+      fuel: document.getElementById('new-fuel').value,
+      lastService: 'Never',
+      mileage: '0 km'
+    };
+    cars.push(newCar);
+    saveCars(cars);
+    renderCars(getCars());
+    toggleAddCar();
+  }
+
+  function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('ae_cart') || '[]');
+    document.getElementById('cart-count').textContent = cart.length;
+  }
+
+  renderCars(getCars());
+  updateCartCount();
+</script>
+</body>
+</html>

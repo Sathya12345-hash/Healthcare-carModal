@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choose Services — AutoElite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a; --deep: #111214; --card: #161820; --border: #2a2d35;
+    --gold: #c9a84c; --gold-light: #e8c97a; --red: #e63946; --green: #4ade80;
+    --white: #f0eeea; --muted: #7a7d85;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'Courier Prime', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--black); color: var(--white); font-family: var(--font-body); font-weight: 300; }
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 60px;
+    background: rgba(10,10,10,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: var(--font-display); font-size: 28px; letter-spacing: 4px; color: var(--gold); text-decoration: none; }
+  .nav-logo span { color: var(--white); }
+  nav ul { list-style: none; display: flex; gap: 36px; }
+  nav ul a { text-decoration: none; color: var(--muted); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; transition: color .2s; }
+  nav ul a:hover, nav ul a.active { color: var(--gold); }
+  .nav-cta { background: var(--gold) !important; color: var(--black) !important; padding: 10px 24px; border-radius: 2px; font-weight: 500 !important; }
+
+  main { padding: 120px 60px 80px; }
+  .layout { display: grid; grid-template-columns: 1fr 380px; gap: 40px; align-items: start; }
+  .page-tag { font-family: var(--font-mono); font-size: 11px; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+  h1 { font-family: var(--font-display); font-size: clamp(44px, 6vw, 80px); letter-spacing: 2px; line-height: 1; margin-bottom: 8px; }
+  .page-sub { color: var(--muted); font-size: 14px; margin-bottom: 40px; }
+
+  /* VEHICLE BANNER */
+  .vehicle-banner {
+    background: var(--card);
+    border: 1px solid var(--gold);
+    padding: 16px 24px;
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 40px;
+    border-radius: 2px;
+  }
+  .vehicle-banner span { font-size: 28px; }
+  .vehicle-info { flex: 1; }
+  .vehicle-name { font-family: var(--font-display); font-size: 22px; letter-spacing: 1px; color: var(--gold); }
+  .vehicle-detail { font-size: 12px; color: var(--muted); }
+  .change-car { font-family: var(--font-mono); font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: 1px; border: 1px solid var(--border); padding: 8px 14px; transition: all .2s; }
+  .change-car:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* TABS */
+  .tabs { display: flex; gap: 0; margin-bottom: 32px; border-bottom: 1px solid var(--border); }
+  .tab {
+    padding: 12px 24px; font-family: var(--font-mono); font-size: 12px;
+    letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
+    color: var(--muted); border-bottom: 3px solid transparent;
+    transition: all .2s; margin-bottom: -1px;
+  }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab:hover { color: var(--white); }
+
+  /* SERVICE LIST */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .services-list { display: flex; flex-direction: column; gap: 12px; }
+  .svc-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    display: flex; align-items: center; gap: 20px;
+    transition: all .2s; border-radius: 2px;
+    cursor: pointer;
+  }
+  .svc-card:hover { border-color: rgba(201,168,76,0.4); }
+  .svc-card.added { border-color: var(--green); background: rgba(74,222,128,0.04); }
+  .svc-icon { font-size: 28px; flex-shrink: 0; }
+  .svc-info { flex: 1; }
+  .svc-name { font-family: var(--font-display); font-size: 22px; letter-spacing: 1px; margin-bottom: 4px; }
+  .svc-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .svc-tags { margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .svc-tag { font-family: var(--font-mono); font-size: 10px; padding: 2px 8px; border: 1px solid var(--border); color: var(--muted); letter-spacing: 1px; }
+  .svc-price { font-family: var(--font-display); font-size: 28px; color: var(--gold); letter-spacing: 1px; flex-shrink: 0; text-align: right; }
+  .svc-price small { display: block; font-family: var(--font-body); font-size: 11px; color: var(--muted); font-weight: 300; margin-top: -4px; letter-spacing: 0; }
+  .btn-add {
+    padding: 10px 18px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px;
+    text-transform: uppercase; font-weight: 700; cursor: pointer;
+    border-radius: 2px; transition: all .2s; flex-shrink: 0;
+  }
+  .btn-add-idle { background: var(--gold); color: var(--black); border: 2px solid var(--gold); }
+  .btn-add-idle:hover { background: transparent; color: var(--gold); }
+  .btn-add-done { background: transparent; color: var(--green); border: 2px solid var(--green); cursor: default; }
+
+  /* CART SIDEBAR */
+  .cart-sidebar {
+    position: sticky; top: 100px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .cart-header {
+    background: var(--deep); padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .cart-title { font-family: var(--font-display); font-size: 22px; letter-spacing: 2px; }
+  .cart-count-badge {
+    background: var(--gold); color: var(--black);
+    font-family: var(--font-mono); font-size: 12px;
+    padding: 4px 10px; border-radius: 99px; font-weight: 700;
+  }
+  .cart-items { padding: 16px; min-height: 120px; }
+  .cart-empty { color: var(--muted); font-family: var(--font-mono); font-size: 12px; letter-spacing: 1px; text-align: center; padding: 24px; }
+  .cart-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .cart-item:last-child { border-bottom: none; }
+  .ci-icon { font-size: 22px; flex-shrink: 0; }
+  .ci-info { flex: 1; }
+  .ci-name { font-size: 13px; font-weight: 500; line-height: 1.3; }
+  .ci-price { font-family: var(--font-mono); font-size: 12px; color: var(--gold); }
+  .ci-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 4px; transition: color .2s; }
+  .ci-remove:hover { color: var(--red); }
+  .cart-footer { padding: 20px 24px; border-top: 1px solid var(--border); background: var(--deep); }
+  .cart-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; color: var(--muted); }
+  .cart-total { display: flex; justify-content: space-between; margin-top: 12px; margin-bottom: 20px; }
+  .cart-total-label { font-family: var(--font-display); font-size: 22px; letter-spacing: 1px; }
+  .cart-total-amount { font-family: var(--font-display); font-size: 26px; color: var(--gold); }
+  .btn-checkout {
+    display: block; width: 100%; padding: 16px;
+    background: var(--gold); color: var(--black); border: none; cursor: pointer;
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    transition: background .2s; border-radius: 2px; text-decoration: none;
+    text-align: center;
+  }
+  .btn-checkout:hover { background: var(--gold-light); }
+  .btn-checkout:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 32px; right: 32px;
+    background: var(--card); border: 1px solid var(--green); color: var(--green);
+    font-family: var(--font-mono); font-size: 13px; letter-spacing: 1px;
+    padding: 14px 24px; border-radius: 2px; z-index: 999;
+    transform: translateY(80px); opacity: 0; transition: all .3s;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  @media (max-width: 1024px) {
+    .layout { grid-template-columns: 1fr; }
+    .cart-sidebar { position: static; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    nav ul { display: none; }
+    main { padding: 90px 24px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">AUTO<span>ELITE</span></a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="select-car.html">Pick A Car</a></li>
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="records.html">Records</a></li>
+    <li><a href="cart.html" class="nav-cta">🛒 Cart <span id="cart-count" style="background:var(--red);color:#fff;padding:2px 7px;border-radius:99px;font-size:11px;margin-left:4px;">0</span></a></li>
+  </ul>
+</nav>
+
+<main>
+  <p class="page-tag">// Step 2 of 3</p>
+  <h1>CHOOSE<br><span style="color:var(--gold)">SERVICES</span></h1>
+  <p class="page-sub">Select all services needed for your vehicle. Bundled services get a discount.</p>
+
+  <div class="vehicle-banner" id="vehicle-banner">
+    <span>🚗</span>
+    <div class="vehicle-info">
+      <div class="vehicle-name" id="vehicle-name">No Vehicle Selected</div>
+      <div class="vehicle-detail" id="vehicle-detail">Please go back and select a car</div>
+    </div>
+    <a href="select-car.html" class="change-car">Change Vehicle</a>
+  </div>
+
+  <div class="layout">
+    <div>
+      <!-- TABS -->
+      <div class="tabs">
+        <div class="tab active" onclick="showTab('maintenance')">Maintenance</div>
+        <div class="tab" onclick="showTab('repair')">Repair</div>
+        <div class="tab" onclick="showTab('detailing')">Detailing</div>
+        <div class="tab" onclick="showTab('diagnostics')">Diagnostics</div>
+      </div>
+
+      <div id="tab-maintenance" class="tab-content active"></div>
+      <div id="tab-repair" class="tab-content"></div>
+      <div id="tab-detailing" class="tab-content"></div>
+      <div id="tab-diagnostics" class="tab-content"></div>
+    </div>
+
+    <!-- CART SIDEBAR -->
+    <div class="cart-sidebar">
+      <div class="cart-header">
+        <div class="cart-title">YOUR CART</div>
+        <div class="cart-count-badge" id="cart-badge">0</div>
+      </div>
+      <div class="cart-items" id="cart-items">
+        <div class="cart-empty">No services added yet</div>
+      </div>
+      <div class="cart-footer">
+        <div class="cart-row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
+        <div class="cart-row"><span>GST (18%)</span><span id="tax">₹0</span></div>
+        <div class="cart-total">
+          <div class="cart-total-label">TOTAL</div>
+          <div class="cart-total-amount" id="grand-total">₹0</div>
+        </div>
+        <a href="cart.html" class="btn-checkout" id="checkout-btn">Proceed to Checkout →</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast">Service added to cart!</div>
+
+<script>
+const SERVICES = {
+  maintenance: [
+    { id:'oil-synthetic', icon:'🔧', name:'Full Synthetic Oil Change', desc:'5W-30 synthetic oil with OEM-grade filter replacement. Suitable for modern petrol engines.', price:1199, tags:['3000 km / 3 months', 'Petrol', '45 min'] },
+    { id:'oil-diesel', icon:'🔧', name:'Diesel Engine Oil Change', desc:'High-performance 5W-40 diesel oil with filter. Turbo engines included.', price:1499, tags:['5000 km / 3 months', 'Diesel', '45 min'] },
+    { id:'tire-rotation', icon:'🔄', name:'Tire Rotation + Balance', desc:'Rotate all four tires and dynamic balancing to ensure even wear and smooth ride.', price:799, tags:['10,000 km', 'All Cars', '30 min'] },
+    { id:'wheel-align', icon:'📐', name:'4-Wheel Alignment', desc:'Computer-aided alignment to factory specs. Reduces tire wear and improves handling.', price:999, tags:['Every 6 months', 'All Cars', '45 min'] },
+    { id:'air-filter', icon:'💨', name:'Air Filter Replacement', desc:'OEM or high-flow air filter replacement for improved engine breathing and efficiency.', price:499, tags:['15,000 km', 'Petrol/Diesel', '15 min'] },
+    { id:'coolant', icon:'🌡️', name:'Coolant Flush & Refill', desc:'Full coolant system flush with fresh antifreeze/coolant and pressure test.', price:899, tags:['40,000 km', 'All Cars', '60 min'] },
+  ],
+  repair: [
+    { id:'brake-pads', icon:'🛑', name:'Brake Pad Replacement', desc:'Front + rear disc brake pad replacement with premium pads and rotor inspection.', price:2499, tags:['40,000 km', 'All Cars', '90 min'] },
+    { id:'brake-fluid', icon:'💧', name:'Brake Fluid Flush', desc:'DOT 4 brake fluid replacement with full system bleed. Critical for braking safety.', price:699, tags:['2 years', 'All Cars', '30 min'] },
+    { id:'battery', icon:'🔋', name:'Battery Replacement', desc:'OEM-grade or premium AGM battery with load test and terminal cleaning.', price:3499, tags:['3-5 years', 'All Cars', '30 min'] },
+    { id:'suspension', icon:'⚙️', name:'Suspension Check & Repair', desc:'Inspect shocks, struts, ball joints, bushings. Report and replace as needed.', price:1999, tags:['Per Inspection', 'All Cars', '2 hrs'] },
+    { id:'timing-belt', icon:'⛓️', name:'Timing Belt Replacement', desc:'Full timing belt kit replacement with tensioner and water pump (if needed).', price:6999, tags:['80,000 km', 'Petrol', '4 hrs'] },
+    { id:'ac-recharge', icon:'❄️', name:'AC Recharge', desc:'R134a refrigerant top-up with UV dye leak test and compressor inspection.', price:1299, tags:['Annually', 'All Cars', '60 min'] },
+  ],
+  detailing: [
+    { id:'basic-wash', icon:'🚿', name:'Basic Exterior Wash', desc:'Hand wash, dry, window clean and interior vacuum.', price:399, tags:['Weekly', 'All Cars', '1 hr'] },
+    { id:'full-detail', icon:'✨', name:'Full Detail Package', desc:'Complete interior + exterior. Clay bar, polish, wax, leather conditioning, steam clean.', price:4999, tags:['Every 3 months', 'All Cars', '6 hrs'] },
+    { id:'ceramic', icon:'🛡️', name:'Ceramic Coating', desc:'Professional 9H ceramic coating application. 2-year protection against UV, water spots, and scratches.', price:14999, tags:['2-year warranty', 'All Cars', '2 days'] },
+    { id:'ppf', icon:'🎖️', name:'Paint Protection Film', desc:'Clear bra PPF on hood, bumper, and fenders. Self-healing polymer protection.', price:24999, tags:['5-year warranty', 'All Cars', '3 days'] },
+    { id:'odor', icon:'🌿', name:'Odor Elimination', desc:'Ozone treatment + enzyme spray to remove pet, smoke and food odors permanently.', price:1499, tags:['As Needed', 'All Cars', '3 hrs'] },
+  ],
+  diagnostics: [
+    { id:'obd-scan', icon:'🖥️', name:'OBD2 Full Scan', desc:'Complete engine, transmission, ABS, airbag and all-system scan with fault code report.', price:499, tags:['As Needed', 'All Cars', '30 min'] },
+    { id:'pre-purchase', icon:'🔍', name:'Pre-Purchase Inspection', desc:'150-point inspection for used car buyers. Full written report with photos.', price:1999, tags:['One-time', 'All Cars', '3 hrs'] },
+    { id:'electrical', icon:'⚡', name:'Electrical System Check', desc:'Battery, alternator, starter, fuses, relays and wiring harness inspection.', price:899, tags:['As Needed', 'All Cars', '2 hrs'] },
+    { id:'engine-diag', icon:'🔬', name:'Engine Deep Diagnostics', desc:'Compression test, fuel pressure, injector performance and timing analysis.', price:1499, tags:['As Needed', 'Petrol/Diesel', '3 hrs'] },
+  ]
+};
+
+let cart = JSON.parse(localStorage.getItem('ae_cart') || '[]');
+
+function renderTab(tabId) {
+  const svcs = SERVICES[tabId];
+  const el = document.getElementById('tab-' + tabId);
+  el.innerHTML = `<div class="services-list">${svcs.map(s => `
+    <div class="svc-card ${cart.find(c=>c.id===s.id) ? 'added' : ''}" id="card-${s.id}">
+      <span class="svc-icon">${s.icon}</span>
+      <div class="svc-info">
+        <div class="svc-name">${s.name}</div>
+        <div class="svc-desc">${s.desc}</div>
+        <div class="svc-tags">${s.tags.map(t=>`<span class="svc-tag">${t}</span>`).join('')}</div>
+      </div>
+      <div class="svc-price">₹${s.price.toLocaleString()}<small>incl. labour</small></div>
+      ${cart.find(c=>c.id===s.id)
+        ? `<button class="btn-add btn-add-done">✓ ADDED</button>`
+        : `<button class="btn-add btn-add-idle" onclick="addToCart('${s.id}','${tabId}')">+ ADD</button>`}
+    </div>
+  `).join('')}</div>`;
+}
+
+function showTab(tabId) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tabId).classList.add('active');
+}
+
+function addToCart(svcId, tabId) {
+  const svc = SERVICES[tabId].find(s => s.id === svcId);
+  if (!svc || cart.find(c => c.id === svcId)) return;
+  const carName = localStorage.getItem('ae_selected_car_name') || 'Unknown Vehicle';
+  cart.push({ ...svc, carName });
+  localStorage.setItem('ae_cart', JSON.stringify(cart));
+  renderTab(tabId);
+  renderCartSidebar();
+  showToast(`${svc.name} added!`);
+}
+
+function removeFromCart(svcId) {
+  cart = cart.filter(c => c.id !== svcId);
+  localStorage.setItem('ae_cart', JSON.stringify(cart));
+  Object.keys(SERVICES).forEach(tab => renderTab(tab));
+  renderCartSidebar();
+}
+
+function renderCartSidebar() {
+  const itemsEl = document.getElementById('cart-items');
+  const badge = document.getElementById('cart-badge');
+  document.getElementById('cart-count').textContent = cart.length;
+  badge.textContent = cart.length;
+
+  if (!cart.length) {
+    itemsEl.innerHTML = '<div class="cart-empty">No services added yet</div>';
+    document.getElementById('subtotal').textContent = '₹0';
+    document.getElementById('tax').textContent = '₹0';
+    document.getElementById('grand-total').textContent = '₹0';
+    return;
+  }
+
+  itemsEl.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <span class="ci-icon">${item.icon}</span>
+      <div class="ci-info">
+        <div class="ci-name">${item.name}</div>
+        <div class="ci-price">₹${item.price.toLocaleString()}</div>
+      </div>
+      <button class="ci-remove" onclick="removeFromCart('${item.id}')">✕</button>
+    </div>
+  `).join('');
+
+  const sub = cart.reduce((a, c) => a + c.price, 0);
+  const tax = Math.round(sub * 0.18);
+  document.getElementById('subtotal').textContent = '₹' + sub.toLocaleString();
+  document.getElementById('tax').textContent = '₹' + tax.toLocaleString();
+  document.getElementById('grand-total').textContent = '₹' + (sub + tax).toLocaleString();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = '✓ ' + msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function loadVehicle() {
+  const selId = localStorage.getItem('ae_selected_car');
+  const cars = JSON.parse(localStorage.getItem('ae_cars') || '[]');
+  const car = cars.find(c => String(c.id) === String(selId));
+  const EMOJI = { Toyota:'🚗', Honda:'🚙', BMW:'🏎️', Hyundai:'🚘', 'Maruti Suzuki':'🛻', Ford:'🚐' };
+  if (car) {
+    document.querySelector('#vehicle-banner span').textContent = EMOJI[car.make] || '🚗';
+    document.getElementById('vehicle-name').textContent = `${car.year} ${car.make} ${car.model}`;
+    document.getElementById('vehicle-detail').textContent = `${car.plate} · ${car.color} · ${car.fuel}`;
+  }
+}
+
+// Init
+Object.keys(SERVICES).forEach(tab => renderTab(tab));
+renderCartSidebar();
+loadVehicle();
+</script>
+</body>
+</html>

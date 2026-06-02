@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoElite — Premium Car Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --deep: #111214;
+    --card: #161820;
+    --border: #2a2d35;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --red: #e63946;
+    --white: #f0eeea;
+    --muted: #7a7d85;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'Courier Prime', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 60px;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--white); }
+  nav ul { list-style: none; display: flex; gap: 36px; }
+  nav ul a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color .2s;
+  }
+  nav ul a:hover { color: var(--gold); }
+  .nav-cta {
+    background: var(--gold);
+    color: var(--black) !important;
+    padding: 10px 24px;
+    border-radius: 2px;
+    font-weight: 500 !important;
+    letter-spacing: 1px !important;
+    transition: background .2s !important;
+  }
+  .nav-cta:hover { background: var(--gold-light) !important; color: var(--black) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 60px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, #1a1408 0%, var(--black) 65%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.25;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 680px; }
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block; width: 40px; height: 1px;
+    background: var(--gold);
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(72px, 10vw, 130px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    margin-bottom: 28px;
+  }
+  h1 .accent { color: var(--gold); }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 440px;
+    margin-bottom: 48px;
+  }
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--black);
+    padding: 16px 36px;
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: all .25s;
+    border: 2px solid var(--gold);
+  }
+  .btn-primary:hover { background: transparent; color: var(--gold); }
+  .btn-secondary {
+    display: inline-block;
+    border: 2px solid var(--border);
+    color: var(--white);
+    padding: 16px 36px;
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all .25s;
+  }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+  .hero-stats {
+    position: absolute; right: 60px; bottom: 80px;
+    display: flex; gap: 48px;
+    z-index: 2;
+  }
+  .stat { text-align: right; }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 52px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* SECTION COMMON */
+  section { padding: 100px 60px; }
+  .section-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(44px, 6vw, 72px);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 60px;
+  }
+
+  /* SERVICES PREVIEW */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2px;
+  }
+  .service-card {
+    background: var(--card);
+    padding: 40px 32px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all .3s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform .3s;
+  }
+  .service-card:hover { background: #1c1f28; }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-icon {
+    font-size: 36px;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .service-name {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .service-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .service-price {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+
+  /* RECORDS TABLE */
+  .records-section { background: var(--deep); }
+  .records-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .records-table thead tr {
+    border-bottom: 2px solid var(--gold);
+  }
+  .records-table th {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 14px 16px;
+    text-align: left;
+  }
+  .records-table td {
+    padding: 16px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .records-table tr:hover td { background: rgba(201,168,76,0.04); color: var(--white); }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .badge-done { background: rgba(40,200,100,0.15); color: #4ade80; }
+  .badge-pending { background: rgba(234,179,8,0.15); color: #facc15; }
+  .badge-progress { background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+  /* BRANDS */
+  .brands-row {
+    display: flex; gap: 0;
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-top: 80px;
+  }
+  .brand-item {
+    flex: 1;
+    padding: 24px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    transition: color .2s;
+    cursor: default;
+  }
+  .brand-item:hover { color: var(--gold); }
+  .brand-item:last-child { border-right: none; }
+
+  /* FOOTER */
+  footer {
+    padding: 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 32px;
+    letter-spacing: 4px;
+    color: var(--gold);
+  }
+  .footer-links { display: flex; gap: 32px; }
+  .footer-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 1px;
+    transition: color .2s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-content { animation: fadeUp .8s ease both; }
+  .hero-stats { animation: fadeUp .8s ease .3s both; }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    nav ul { display: none; }
+    .hero { padding: 100px 24px 60px; }
+    .hero-stats { right: 24px; gap: 24px; }
+    section { padding: 60px 24px; }
+    footer { padding: 40px 24px; flex-direction: column; align-items: flex-start; }
+    .brands-row { flex-wrap: wrap; }
+    .brand-item { flex: 1 1 33%; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">AUTO<span>ELITE</span></a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="select-car.html">Pick A Car</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="records.html">Records</a></li>
+    <li><a href="cart.html" class="nav-cta">🛒 Cart <span id="cart-count" style="background:var(--red);color:#fff;padding:2px 7px;border-radius:99px;font-size:11px;margin-left:4px;">0</span></a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Premium Automotive Care</div>
+    <h1>YOUR CAR<br>DESERVES<br>THE <span class="accent">BEST</span></h1>
+    <p class="hero-sub">From oil changes to full detailing — schedule your service, track history, and keep your vehicle in peak condition.</p>
+    <div class="hero-btns">
+      <a href="select-car.html" class="btn-primary">Book A Service</a>
+      <a href="records.html" class="btn-secondary">View Records</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">12K+</div>
+      <div class="stat-label">Cars Serviced</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">98%</div>
+      <div class="stat-label">Satisfaction</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">24H</div>
+      <div class="stat-label">Turnaround</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES PREVIEW -->
+<section id="services">
+  <p class="section-tag">// What We Offer</p>
+  <h2>OUR SERVICES</h2>
+  <p class="section-sub">Select a service category below to explore packages, pricing, and add them to your booking.</p>
+  <div class="services-grid">
+    <a href="services.html?cat=oil" class="service-card">
+      <span class="service-icon">🔧</span>
+      <div class="service-name">OIL CHANGE</div>
+      <div class="service-desc">Full synthetic, semi-synthetic, and conventional oil service with filter replacement.</div>
+      <div class="service-price">FROM ₹599</div>
+    </a>
+    <a href="services.html?cat=tire" class="service-card">
+      <span class="service-icon">🔄</span>
+      <div class="service-name">TIRE SERVICE</div>
+      <div class="service-desc">Rotation, balancing, alignment, and new tire fitting for all vehicle types.</div>
+      <div class="service-price">FROM ₹799</div>
+    </a>
+    <a href="services.html?cat=brake" class="service-card">
+      <span class="service-icon">🛑</span>
+      <div class="service-name">BRAKE SERVICE</div>
+      <div class="service-desc">Pad replacement, rotor resurfacing, caliper inspection and brake fluid flush.</div>
+      <div class="service-price">FROM ₹1,299</div>
+    </a>
+    <a href="services.html?cat=detail" class="service-card">
+      <span class="service-icon">✨</span>
+      <div class="service-name">DETAILING</div>
+      <div class="service-desc">Interior deep clean, exterior polish, ceramic coating and paint correction.</div>
+      <div class="service-price">FROM ₹2,499</div>
+    </a>
+    <a href="services.html?cat=ac" class="service-card">
+      <span class="service-icon">❄️</span>
+      <div class="service-name">AC SERVICE</div>
+      <div class="service-desc">Refrigerant recharge, compressor check, cabin air filter and system diagnostics.</div>
+      <div class="service-price">FROM ₹999</div>
+    </a>
+    <a href="services.html?cat=diag" class="service-card">
+      <span class="service-icon">🖥️</span>
+      <div class="service-name">DIAGNOSTICS</div>
+      <div class="service-desc">Full OBD2 scan, engine diagnostics, electrical systems and fault code clearing.</div>
+      <div class="service-price">FROM ₹499</div>
+    </a>
+  </div>
+
+  <div class="brands-row">
+    <div class="brand-item">TOYOTA</div>
+    <div class="brand-item">HONDA</div>
+    <div class="brand-item">BMW</div>
+    <div class="brand-item">HYUNDAI</div>
+    <div class="brand-item">FORD</div>
+    <div class="brand-item">MERCEDES</div>
+    <div class="brand-item">SUZUKI</div>
+  </div>
+</section>
+
+<!-- RECENT RECORDS PREVIEW -->
+<section class="records-section">
+  <p class="section-tag">// Service History</p>
+  <h2>RECENT RECORDS</h2>
+  <p class="section-sub">Sample service history for registered vehicles. <a href="records.html" style="color:var(--gold);">View full records →</a></p>
+  <table class="records-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Vehicle</th>
+        <th>Service</th>
+        <th>Technician</th>
+        <th>Cost</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>29 May 2025</td>
+        <td>Toyota Camry — TN09 AB 1234</td>
+        <td>Full Synthetic Oil Change</td>
+        <td>Rajan M.</td>
+        <td>₹1,199</td>
+        <td><span class="badge badge-done">Completed</span></td>
+      </tr>
+      <tr>
+        <td>26 May 2025</td>
+        <td>Honda City — TN07 CD 5678</td>
+        <td>Brake Pad Replacement + Fluid</td>
+        <td>Suresh K.</td>
+        <td>₹2,850</td>
+        <td><span class="badge badge-done">Completed</span></td>
+      </tr>
+      <tr>
+        <td>28 May 2025</td>
+        <td>BMW 3 Series — TN01 EF 9012</td>
+        <td>AC Recharge + Diagnostics</td>
+        <td>Arjun P.</td>
+        <td>₹3,499</td>
+        <td><span class="badge badge-progress">In Progress</span></td>
+      </tr>
+      <tr>
+        <td>30 May 2025</td>
+        <td>Hyundai Creta — TN22 GH 3456</td>
+        <td>Tire Rotation + Alignment</td>
+        <td>Priya S.</td>
+        <td>₹1,499</td>
+        <td><span class="badge badge-pending">Pending</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <div class="footer-logo">AUTOELITE</div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="select-car.html">Book Service</a>
+    <a href="records.html">Records</a>
+    <a href="cart.html">Cart</a>
+  </div>
+  <div class="footer-copy">© 2025 AutoElite. All rights reserved.</div>
+</footer>
+
+<script>
+  // Update cart count from localStorage
+  function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('ae_cart') || '[]');
+    document.getElementById('cart-count').textContent = cart.length;
+  }
+  updateCartCount();
+</script>
+</body>
+</html>

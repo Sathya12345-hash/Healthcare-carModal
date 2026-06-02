@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — AutoElite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a; --deep: #111214; --card: #161820; --border: #2a2d35;
+    --gold: #c9a84c; --gold-light: #e8c97a; --red: #e63946; --green: #4ade80;
+    --white: #f0eeea; --muted: #7a7d85;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'Courier Prime', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--black); color: var(--white); font-family: var(--font-body); font-weight: 300; }
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 60px;
+    background: rgba(10,10,10,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: var(--font-display); font-size: 28px; letter-spacing: 4px; color: var(--gold); text-decoration: none; }
+  .nav-logo span { color: var(--white); }
+  nav ul { list-style: none; display: flex; gap: 36px; }
+  nav ul a { text-decoration: none; color: var(--muted); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; transition: color .2s; }
+  nav ul a:hover { color: var(--gold); }
+  .nav-cta { background: var(--gold) !important; color: var(--black) !important; padding: 10px 24px; border-radius: 2px; font-weight: 500 !important; }
+
+  main { padding: 120px 60px 80px; }
+  .page-tag { font-family: var(--font-mono); font-size: 11px; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+  h1 { font-family: var(--font-display); font-size: clamp(44px, 6vw, 80px); letter-spacing: 2px; line-height: 1; margin-bottom: 8px; }
+  .page-sub { color: var(--muted); font-size: 15px; margin-bottom: 48px; }
+
+  .checkout-layout { display: grid; grid-template-columns: 1fr 420px; gap: 40px; align-items: start; }
+
+  /* CART SECTION */
+  .section-title {
+    font-family: var(--font-display); font-size: 28px; letter-spacing: 2px;
+    margin-bottom: 20px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .clear-btn {
+    font-family: var(--font-mono); font-size: 11px; color: var(--red);
+    background: none; border: 1px solid rgba(230,57,70,0.3); cursor: pointer;
+    padding: 6px 14px; letter-spacing: 1px; text-transform: uppercase;
+    transition: all .2s; border-radius: 2px;
+  }
+  .clear-btn:hover { background: rgba(230,57,70,0.1); }
+
+  /* CART ITEMS */
+  .cart-item-row {
+    display: flex; gap: 16px; align-items: center;
+    padding: 20px 0; border-bottom: 1px solid var(--border);
+  }
+  .ci-num {
+    font-family: var(--font-mono); font-size: 11px; color: var(--muted);
+    width: 24px; text-align: center; flex-shrink: 0;
+  }
+  .ci-icon { font-size: 30px; flex-shrink: 0; }
+  .ci-body { flex: 1; }
+  .ci-name { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
+  .ci-car { font-size: 12px; color: var(--muted); }
+  .ci-tags { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+  .ci-tag { font-family: var(--font-mono); font-size: 10px; padding: 2px 8px; border: 1px solid var(--border); color: var(--muted); }
+  .ci-price { font-family: var(--font-display); font-size: 24px; color: var(--gold); flex-shrink: 0; }
+  .ci-remove {
+    background: none; border: none; color: var(--muted); cursor: pointer;
+    font-size: 18px; padding: 4px 8px; transition: color .2s;
+  }
+  .ci-remove:hover { color: var(--red); }
+
+  .empty-cart {
+    text-align: center; padding: 80px 20px;
+    font-family: var(--font-mono); color: var(--muted); letter-spacing: 1px;
+  }
+  .empty-cart .empty-icon { font-size: 56px; margin-bottom: 16px; display: block; }
+  .empty-cart a {
+    color: var(--gold); display: inline-block; margin-top: 16px;
+    border: 1px solid var(--gold); padding: 12px 24px;
+    font-size: 12px; letter-spacing: 2px; text-decoration: none; transition: all .2s;
+  }
+  .empty-cart a:hover { background: var(--gold); color: var(--black); }
+
+  /* SCHEDULE */
+  .schedule-section { margin-top: 40px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1/-1; }
+  .form-group label { font-family: var(--font-mono); font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; }
+  .form-group input, .form-group select, .form-group textarea {
+    background: var(--card); border: 1px solid var(--border);
+    color: var(--white); padding: 12px 16px;
+    font-family: var(--font-body); font-size: 14px; border-radius: 2px;
+    outline: none; transition: border-color .2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+  /* PAYMENT */
+  .payment-sticky {
+    position: sticky; top: 100px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+  }
+  .payment-header {
+    background: var(--deep); padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .payment-header h3 { font-family: var(--font-display); font-size: 26px; letter-spacing: 2px; }
+  .payment-body { padding: 24px; }
+
+  /* PAYMENT METHODS */
+  .pay-methods { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .pay-method {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px; border: 2px solid var(--border);
+    border-radius: 2px; cursor: pointer; transition: all .2s;
+  }
+  .pay-method:hover { border-color: rgba(201,168,76,0.4); }
+  .pay-method.selected { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+  .pay-method input[type=radio] { accent-color: var(--gold); width: 16px; height: 16px; }
+  .pay-icon { font-size: 22px; }
+  .pay-label { flex: 1; }
+  .pay-name { font-size: 14px; font-weight: 500; }
+  .pay-sub { font-size: 11px; color: var(--muted); }
+
+  /* CARD FIELDS */
+  .card-fields { display: none; }
+  .card-fields.show { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .card-input {
+    background: var(--deep); border: 1px solid var(--border);
+    color: var(--white); padding: 12px 14px;
+    font-family: var(--font-mono); font-size: 14px; border-radius: 2px;
+    outline: none; transition: border-color .2s; width: 100%;
+    letter-spacing: 2px;
+  }
+  .card-input:focus { border-color: var(--gold); }
+  .card-input::placeholder { color: var(--muted); letter-spacing: 0; }
+
+  /* BREAKDOWN */
+  .breakdown { border-top: 1px solid var(--border); padding-top: 16px; margin-bottom: 20px; }
+  .breakdown-row {
+    display: flex; justify-content: space-between;
+    font-size: 13px; color: var(--muted); margin-bottom: 8px;
+  }
+  .breakdown-row.discount { color: var(--green); }
+  .breakdown-total {
+    display: flex; justify-content: space-between;
+    margin-top: 12px; padding-top: 12px;
+    border-top: 2px solid var(--gold);
+  }
+  .bt-label { font-family: var(--font-display); font-size: 28px; letter-spacing: 1px; }
+  .bt-val { font-family: var(--font-display); font-size: 28px; color: var(--gold); }
+
+  /* PROMO */
+  .promo-row { display: flex; gap: 8px; margin-bottom: 16px; }
+  .promo-input {
+    flex: 1; background: var(--deep); border: 1px solid var(--border);
+    color: var(--white); padding: 12px 14px;
+    font-family: var(--font-mono); font-size: 13px; letter-spacing: 2px; border-radius: 2px;
+    outline: none; transition: border-color .2s;
+  }
+  .promo-input:focus { border-color: var(--gold); }
+  .promo-btn {
+    background: none; border: 1px solid var(--border); color: var(--muted);
+    padding: 12px 18px; font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 1px; cursor: pointer; transition: all .2s; border-radius: 2px;
+  }
+  .promo-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .promo-msg { font-family: var(--font-mono); font-size: 11px; margin-bottom: 12px; }
+
+  .btn-pay {
+    display: block; width: 100%; padding: 18px;
+    background: var(--gold); color: var(--black); border: none; cursor: pointer;
+    font-family: var(--font-mono); font-size: 14px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    transition: all .25s; border-radius: 2px;
+  }
+  .btn-pay:hover { background: var(--gold-light); }
+  .btn-pay:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+  .secure-note {
+    text-align: center; font-family: var(--font-mono); font-size: 10px;
+    color: var(--muted); margin-top: 12px; letter-spacing: 1px;
+  }
+
+  /* SUCCESS */
+  .success-screen {
+    display: none; text-align: center; padding: 80px 20px;
+    animation: fadeUp .6s ease both;
+  }
+  .success-screen.show { display: block; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(30px); } to { opacity:1; transform: translateY(0); } }
+  .success-icon { font-size: 72px; margin-bottom: 20px; display: block; }
+  .success-title { font-family: var(--font-display); font-size: 60px; color: var(--green); letter-spacing: 2px; margin-bottom: 8px; }
+  .success-id { font-family: var(--font-mono); font-size: 13px; color: var(--gold); letter-spacing: 3px; margin-bottom: 24px; }
+  .success-sub { color: var(--muted); font-size: 15px; line-height: 1.7; max-width: 480px; margin: 0 auto 36px; }
+  .success-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-s-primary { background: var(--gold); color: var(--black); padding: 14px 32px; font-family: var(--font-mono); font-size: 13px; font-weight: 700; letter-spacing: 2px; text-decoration: none; border-radius: 2px; }
+  .btn-s-ghost { border: 2px solid var(--border); color: var(--white); padding: 14px 32px; font-family: var(--font-mono); font-size: 13px; letter-spacing: 2px; text-decoration: none; border-radius: 2px; }
+
+  @media (max-width: 1024px) { .checkout-layout { grid-template-columns: 1fr; } .payment-sticky { position: static; } }
+  @media (max-width: 768px) { nav { padding: 16px 24px; } nav ul { display: none; } main { padding: 90px 24px 60px; } .form-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">AUTO<span>ELITE</span></a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="select-car.html">Pick A Car</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="records.html">Records</a></li>
+    <li><a href="cart.html" class="nav-cta">🛒 Cart <span id="cart-count" style="background:var(--red);color:#fff;padding:2px 7px;border-radius:99px;font-size:11px;margin-left:4px;">0</span></a></li>
+  </ul>
+</nav>
+
+<main>
+  <div id="main-content">
+    <p class="page-tag">// Step 3 of 3</p>
+    <h1>CART &amp;<br><span style="color:var(--gold)">PAYMENT</span></h1>
+    <p class="page-sub">Review your services, schedule appointment and complete payment.</p>
+
+    <div class="checkout-layout">
+      <!-- LEFT -->
+      <div>
+        <!-- CART ITEMS -->
+        <div class="section-title">
+          SELECTED SERVICES
+          <button class="clear-btn" onclick="clearCart()">Clear All</button>
+        </div>
+        <div id="cart-list"></div>
+
+        <!-- SCHEDULE -->
+        <div class="schedule-section">
+          <div class="section-title">SCHEDULE APPOINTMENT</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Preferred Date</label>
+              <input type="date" id="appt-date">
+            </div>
+            <div class="form-group">
+              <label>Preferred Time</label>
+              <select id="appt-time">
+                <option>8:00 AM</option><option>9:00 AM</option>
+                <option>10:00 AM</option><option>11:00 AM</option>
+                <option>12:00 PM</option><option>2:00 PM</option>
+                <option>3:00 PM</option><option>4:00 PM</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Your Name</label>
+              <input type="text" id="cust-name" placeholder="Full name">
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="cust-phone" placeholder="+91 98765 43210">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="cust-email" placeholder="you@email.com">
+            </div>
+            <div class="form-group">
+              <label>Drop-off vs Pick-up</label>
+              <select id="service-type">
+                <option>I will drop off my car</option>
+                <option>Pick-up & Drop service (+₹299)</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>Additional Notes</label>
+              <textarea id="notes" placeholder="Any specific concerns or instructions…"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT — PAYMENT -->
+      <div class="payment-sticky">
+        <div class="payment-header">
+          <h3>PAYMENT</h3>
+        </div>
+        <div class="payment-body">
+          <!-- PAYMENT METHODS -->
+          <div class="pay-methods">
+            <label class="pay-method selected" onclick="selectPay(this,'card')">
+              <input type="radio" name="pay" checked>
+              <span class="pay-icon">💳</span>
+              <div class="pay-label"><div class="pay-name">Credit / Debit Card</div><div class="pay-sub">Visa, Mastercard, Rupay</div></div>
+            </label>
+            <label class="pay-method" onclick="selectPay(this,'upi')">
+              <input type="radio" name="pay">
+              <span class="pay-icon">📱</span>
+              <div class="pay-label"><div class="pay-name">UPI</div><div class="pay-sub">GPay, PhonePe, Paytm</div></div>
+            </label>
+            <label class="pay-method" onclick="selectPay(this,'netbanking')">
+              <input type="radio" name="pay">
+              <span class="pay-icon">🏦</span>
+              <div class="pay-label"><div class="pay-name">Net Banking</div><div class="pay-sub">All major Indian banks</div></div>
+            </label>
+            <label class="pay-method" onclick="selectPay(this,'cash')">
+              <input type="radio" name="pay">
+              <span class="pay-icon">💵</span>
+              <div class="pay-label"><div class="pay-name">Pay at Centre</div><div class="pay-sub">Cash on delivery/pickup</div></div>
+            </label>
+          </div>
+
+          <!-- CARD FIELDS -->
+          <div class="card-fields show" id="card-fields">
+            <input class="card-input" type="text" placeholder="Card number" maxlength="19" oninput="formatCard(this)">
+            <input class="card-input" type="text" placeholder="Cardholder name">
+            <div class="card-row">
+              <input class="card-input" type="text" placeholder="MM / YY" maxlength="7">
+              <input class="card-input" type="text" placeholder="CVV" maxlength="3">
+            </div>
+          </div>
+
+          <!-- UPI -->
+          <div id="upi-field" style="display:none;margin-bottom:16px;">
+            <input class="card-input" style="width:100%" type="text" placeholder="yourname@upi">
+          </div>
+
+          <!-- PROMO -->
+          <div class="promo-row">
+            <input class="promo-input" id="promo-input" type="text" placeholder="PROMO CODE" maxlength="12">
+            <button class="promo-btn" onclick="applyPromo()">APPLY</button>
+          </div>
+          <div class="promo-msg" id="promo-msg"></div>
+
+          <!-- BREAKDOWN -->
+          <div class="breakdown">
+            <div class="breakdown-row"><span>Subtotal</span><span id="b-sub">₹0</span></div>
+            <div class="breakdown-row"><span>GST (18%)</span><span id="b-tax">₹0</span></div>
+            <div class="breakdown-row discount" id="b-disc-row" style="display:none;"><span>Discount</span><span id="b-disc">−₹0</span></div>
+            <div class="breakdown-row" id="b-pickup-row" style="display:none;"><span>Pick-up fee</span><span>₹299</span></div>
+          </div>
+          <div class="breakdown-total">
+            <div class="bt-label">TOTAL</div>
+            <div class="bt-val" id="b-total">₹0</div>
+          </div>
+
+          <button class="btn-pay" id="pay-btn" onclick="processPayment()">CONFIRM & PAY</button>
+          <p class="secure-note">🔒 SECURED · ENCRYPTED · GST INVOICE INCLUDED</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS SCREEN -->
+  <div class="success-screen" id="success-screen">
+    <span class="success-icon">✅</span>
+    <div class="success-title">BOOKING CONFIRMED!</div>
+    <div class="success-id" id="success-id">Booking ID: AE-2025-XXXX</div>
+    <p class="success-sub">Your service appointment has been booked. Our team will contact you shortly to confirm the slot. You'll receive an SMS and email confirmation.</p>
+    <div class="success-actions">
+      <a href="records.html" class="btn-s-primary">View in Records</a>
+      <a href="index.html" class="btn-s-ghost">Back to Home</a>
+    </div>
+  </div>
+</main>
+
+<script>
+  let cart = JSON.parse(localStorage.getItem('ae_cart') || '[]');
+  let discount = 0;
+  let payMethod = 'card';
+
+  const PROMOS = { 'ELITE10': 0.10, 'FIRST20': 0.20, 'SAVE5': 0.05 };
+
+  function renderCart() {
+    const el = document.getElementById('cart-list');
+    document.getElementById('cart-count').textContent = cart.length;
+
+    if (!cart.length) {
+      el.innerHTML = `<div class="empty-cart">
+        <span class="empty-icon">🛒</span>
+        <div>Your cart is empty</div>
+        <a href="services.html">← Browse Services</a>
+      </div>`;
+      document.getElementById('pay-btn').disabled = true;
+      updateBreakdown();
+      return;
+    }
+
+    document.getElementById('pay-btn').disabled = false;
+    el.innerHTML = cart.map((item, i) => `
+      <div class="cart-item-row">
+        <div class="ci-num">${String(i+1).padStart(2,'0')}</div>
+        <span class="ci-icon">${item.icon}</span>
+        <div class="ci-body">
+          <div class="ci-name">${item.name}</div>
+          <div class="ci-car">${item.carName || 'Your Vehicle'}</div>
+          <div class="ci-tags">${(item.tags||[]).map(t=>`<span class="ci-tag">${t}</span>`).join('')}</div>
+        </div>
+        <div class="ci-price">₹${item.price.toLocaleString()}</div>
+        <button class="ci-remove" onclick="removeItem('${item.id}')">✕</button>
+      </div>
+    `).join('');
+    updateBreakdown();
+  }
+
+  function removeItem(id) {
+    cart = cart.filter(c => c.id !== id);
+    localStorage.setItem('ae_cart', JSON.stringify(cart));
+    renderCart();
+  }
+
+  function clearCart() {
+    if (!confirm('Remove all services from cart?')) return;
+    cart = [];
+    localStorage.setItem('ae_cart', JSON.stringify(cart));
+    renderCart();
+  }
+
+  function getPickupFee() {
+    const type = document.getElementById('service-type');
+    return type && type.value.includes('Pick-up') ? 299 : 0;
+  }
+
+  function updateBreakdown() {
+    const sub = cart.reduce((a, c) => a + c.price, 0);
+    const tax = Math.round(sub * 0.18);
+    const disc = Math.round(sub * discount);
+    const pickup = getPickupFee();
+    const total = sub + tax - disc + pickup;
+
+    document.getElementById('b-sub').textContent = '₹' + sub.toLocaleString();
+    document.getElementById('b-tax').textContent = '₹' + tax.toLocaleString();
+    document.getElementById('b-disc').textContent = '−₹' + disc.toLocaleString();
+    document.getElementById('b-disc-row').style.display = disc ? 'flex' : 'none';
+    document.getElementById('b-pickup-row').style.display = pickup ? 'flex' : 'none';
+    document.getElementById('b-total').textContent = '₹' + total.toLocaleString();
+  }
+
+  function selectPay(el, method) {
+    payMethod = method;
+    document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('card-fields').classList.toggle('show', method === 'card');
+    document.getElementById('upi-field').style.display = method === 'upi' ? 'block' : 'none';
+  }
+
+  function applyPromo() {
+    const code = document.getElementById('promo-input').value.trim().toUpperCase();
+    const msg = document.getElementById('promo-msg');
+    if (PROMOS[code]) {
+      discount = PROMOS[code];
+      msg.style.color = '#4ade80';
+      msg.textContent = `✓ Code applied! ${discount*100}% off`;
+    } else {
+      discount = 0;
+      msg.style.color = '#e63946';
+      msg.textContent = '✗ Invalid promo code';
+    }
+    updateBreakdown();
+    setTimeout(() => msg.textContent = '', 3000);
+  }
+
+  function formatCard(input) {
+    let v = input.value.replace(/\D/g,'').substring(0,16);
+    input.value = v.replace(/(.{4})/g,'$1 ').trim();
+  }
+
+  function processPayment() {
+    if (!cart.length) { alert('Your cart is empty!'); return; }
+    const name = document.getElementById('cust-name').value.trim();
+    const date = document.getElementById('appt-date').value;
+    if (!name) { alert('Please enter your name.'); return; }
+    if (!date) { alert('Please select a preferred date.'); return; }
+
+    const btn = document.getElementById('pay-btn');
+    btn.disabled = true;
+    btn.textContent = 'PROCESSING…';
+
+    setTimeout(() => {
+      const bookingId = 'AE-2025-' + Math.floor(1000 + Math.random() * 9000);
+      document.getElementById('success-id').textContent = 'Booking ID: ' + bookingId;
+      localStorage.setItem('ae_cart', '[]');
+      document.getElementById('main-content').style.display = 'none';
+      document.getElementById('success-screen').classList.add('show');
+    }, 2000);
+  }
+
+  // Pickup fee listener
+  document.addEventListener('DOMContentLoaded', () => {
+    const st = document.getElementById('service-type');
+    if (st) st.addEventListener('change', updateBreakdown);
+    // Set min date to today
+    const dateInput = document.getElementById('appt-date');
+    if (dateInput) {
+      const today = new Date().toISOString().split('T')[0];
+      dateInput.min = today;
+    }
+  });
+
+  renderCart();
+</script>
+</body>
+</html>
