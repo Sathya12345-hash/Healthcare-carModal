@@ -57,19 +57,7 @@
         .logo span {
             color: var(--secondary);
         }
-The Page In and Page Out events should be triggered not only when the user switches between browser tabs but also when the user moves the mouse pointer outside the browser window or returns to it.
 
-Please ensure that these scenarios and related edge cases are covered during implementation and testing:
-
-* Switching from the current tab to another tab (Page Out).
-* Returning to the tab (Page In).
-* Moving the mouse pointer outside the browser window (Page Out, if applicable).
-* Moving the mouse pointer back into the browser window (Page In, if applicable).
-* Rapid tab switching.
-* Browser minimize and restore actions.
-* Window focus and blur events.
-
-Please verify that the Page In and Page Out conditions are triggered consistently across all supported browsers.
         nav {
             display: flex;
             align-items: center;
@@ -537,7 +525,7 @@ Please verify that the Page In and Page Out conditions are triggered consistentl
         <nav>
             <ul>
                 <li><a id="nav-home" class="active" onclick="switchTab('home')">Home</a></li>
-                <li><a id="nav-appointments" onclick="switchTab('records')">Appointments</a></li>
+                <!-- <li><a id="nav-appointments" onclick="switchTab('records')">Appointments</a></li> -->
                 <li><a id="nav-records" onclick="switchTab('records')">Records</a></li>
                 <li><a id="nav-login" onclick="switchTab('login')">Login</a></li>
             </ul>
