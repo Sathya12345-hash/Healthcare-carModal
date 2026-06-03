@@ -1,301 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <script src="js/ResulSDK.js" defer></script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Service Records — AutoElite</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --black: #0a0a0a; --deep: #111214; --card: #161820; --border: #2a2d35;
-    --gold: #c9a84c; --gold-light: #e8c97a; --red: #e63946; --green: #4ade80;
-    --blue: #60a5fa; --yellow: #facc15; --white: #f0eeea; --muted: #7a7d85;
-    --font-display: 'Bebas Neue', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-    --font-mono: 'Courier Prime', monospace;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--black); color: var(--white); font-family: var(--font-body); font-weight: 300; }
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 20px 60px;
-    background: rgba(10,10,10,0.92); backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo { font-family: var(--font-display); font-size: 28px; letter-spacing: 4px; color: var(--gold); text-decoration: none; }
-  .nav-logo span { color: var(--white); }
-  nav ul { list-style: none; display: flex; gap: 36px; }
-  nav ul a { text-decoration: none; color: var(--muted); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; transition: color .2s; }
-  nav ul a:hover, nav ul a.active { color: var(--gold); }
-  .nav-cta { background: var(--gold) !important; color: var(--black) !important; padding: 10px 24px; border-radius: 2px; font-weight: 500 !important; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthCare - Medical Records</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #005A8D;
+            --secondary: #E35205;
+            --light-bg: #F4F7F6;
+            --text-dark: #333333;
+            --text-light: #777777;
+            --white: #FFFFFF;
+            --border: #E0E0E0;
+            --danger: #D32F2F;
+        }
 
-  main { padding: 120px 60px 80px; }
-  .page-tag { font-family: var(--font-mono); font-size: 11px; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
-  h1 { font-family: var(--font-display); font-size: clamp(48px, 7vw, 90px); letter-spacing: 2px; line-height: 1; margin-bottom: 8px; }
-  .page-sub { color: var(--muted); font-size: 15px; margin-bottom: 48px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
 
-  /* SUMMARY CARDS */
-  .summary-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 48px; }
-  .summary-card { background: var(--card); border: 1px solid var(--border); padding: 24px; border-radius: 2px; }
-  .summary-num { font-family: var(--font-display); font-size: 44px; letter-spacing: 1px; color: var(--gold); line-height: 1; }
-  .summary-label { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+        }
 
-  /* FILTERS */
-  .filter-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; align-items: flex-end; }
-  .filter-group { display: flex; flex-direction: column; gap: 6px; }
-  .filter-group label { font-family: var(--font-mono); font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; }
-  .filter-group select, .filter-group input {
-    background: var(--card); border: 1px solid var(--border);
-    color: var(--white); padding: 10px 16px;
-    font-family: var(--font-body); font-size: 13px; border-radius: 2px;
-    outline: none; transition: border-color .2s; min-width: 180px;
-  }
-  .filter-group select:focus, .filter-group input:focus { border-color: var(--gold); }
+        /* HEADER */
+        header {
+            background: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-  /* TABLE */
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 800px; }
-  thead tr { border-bottom: 2px solid var(--gold); }
-  th {
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px;
-    text-transform: uppercase; color: var(--gold); padding: 14px 16px; text-align: left;
-  }
-  td { padding: 16px 16px; border-bottom: 1px solid var(--border); color: var(--muted); }
-  tr:hover td { background: rgba(201,168,76,0.04); color: var(--white); }
-  .record-id { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
-  .car-cell { font-weight: 500; color: var(--white); }
-  .plate-cell { font-family: var(--font-mono); font-size: 12px; color: var(--gold); }
-  .cost-cell { font-family: var(--font-mono); font-size: 13px; color: var(--white); }
-  .badge {
-    display: inline-block; padding: 3px 10px; border-radius: 2px;
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
-    text-transform: uppercase; font-weight: 700;
-  }
-  .badge-done { background: rgba(74,222,128,0.15); color: var(--green); }
-  .badge-pending { background: rgba(250,204,21,0.15); color: var(--yellow); }
-  .badge-progress { background: rgba(96,165,250,0.15); color: var(--blue); }
-  .badge-cancelled { background: rgba(230,57,70,0.15); color: var(--red); }
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
 
-  .btn-view {
-    background: none; border: 1px solid var(--border); color: var(--muted);
-    padding: 6px 14px; font-family: var(--font-mono); font-size: 10px;
-    letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all .2s;
-    border-radius: 2px;
-  }
-  .btn-view:hover { border-color: var(--gold); color: var(--gold); }
+        .logo span {
+            color: var(--secondary);
+        }
 
-  /* MODAL */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-    z-index: 200; align-items: center; justify-content: center; padding: 24px;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--deep); border: 1px solid var(--border); border-radius: 4px;
-    padding: 40px; max-width: 560px; width: 100%; position: relative;
-    max-height: 80vh; overflow-y: auto;
-  }
-  .modal-close {
-    position: absolute; top: 16px; right: 20px;
-    background: none; border: none; color: var(--muted); font-size: 24px;
-    cursor: pointer; transition: color .2s;
-  }
-  .modal-close:hover { color: var(--white); }
-  .modal-title { font-family: var(--font-display); font-size: 32px; letter-spacing: 2px; margin-bottom: 4px; }
-  .modal-sub { font-family: var(--font-mono); font-size: 11px; color: var(--gold); letter-spacing: 2px; margin-bottom: 28px; }
-  .modal-row { display: flex; gap: 12px; margin-bottom: 12px; }
-  .modal-label { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; width: 140px; flex-shrink: 0; }
-  .modal-value { font-size: 14px; color: var(--white); }
-  .modal-divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
-  .modal-items { display: flex; flex-direction: column; gap: 8px; }
-  .modal-item { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--border); }
-  .modal-total { display: flex; justify-content: space-between; margin-top: 12px; }
-  .modal-total-label { font-family: var(--font-display); font-size: 22px; }
-  .modal-total-val { font-family: var(--font-display); font-size: 22px; color: var(--gold); }
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
 
-  @media (max-width: 768px) {
-    nav { padding: 16px 24px; }
-    nav ul { display: none; }
-    main { padding: 90px 24px 60px; }
-    .summary-row { grid-template-columns: repeat(2, 1fr); }
-  }
-</style>
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--primary);
+        }
+
+        .emergency-btn {
+            background: var(--danger);
+            color: var(--white);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(211, 47, 47, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(211, 47, 47, 0);
+            }
+        }
+
+        /* CONTAINER */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        /* RECORDS TABLE */
+        .records-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .records-table th,
+        .records-table td {
+            padding: 18px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .records-table th {
+            background: var(--primary);
+            color: var(--white);
+            font-weight: 500;
+        }
+
+        .records-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .view-btn {
+            padding: 6px 12px;
+            background: var(--light-bg);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<nav>
-  <a href="index.html" class="nav-logo">AUTO<span>ELITE</span></a>
-  <ul>
-    <li><a href="index.html">Home</a></li>
-    <li><a href="select-car.html">Pick A Car</a></li>
-    <li><a href="services.html">Services</a></li>
-    <li><a href="records.html" class="active">Records</a></li>
-    <li><a href="cart.html" class="nav-cta">🛒 Cart <span id="cart-count" style="background:var(--red);color:#fff;padding:2px 7px;border-radius:99px;font-size:11px;margin-left:4px;">0</span></a></li>
-  </ul>
-</nav>
+    <header>
+        <div class="logo" onclick="window.location.href='home.html'">HealthCare<span>.</span></div>
+        <nav>
+            <ul>
+                <li><a id="nav-home" href="home.html">Home</a></li>
+                <li><a id="nav-appointments" href="appointments.html">Appointments</a></li>
+                <li><a id="nav-records" class="active" href="records.html">Records</a></li>
+                <li><a id="nav-login" onclick="handleLogoutClick()">Logout</a></li>
+            </ul>
+            <button class="emergency-btn">🚨 Emergency 1068</button>
+        </nav>
+    </header>
 
-<main>
-  <p class="page-tag">// Service History</p>
-  <h1>SERVICE<br><span style="color:var(--gold)">RECORDS</span></h1>
-  <p class="page-sub">Full maintenance history for all registered vehicles.</p>
-
-  <div class="summary-row">
-    <div class="summary-card"><div class="summary-num">24</div><div class="summary-label">Total Services</div></div>
-    <div class="summary-card"><div class="summary-num">₹1.2L</div><div class="summary-label">Total Spent</div></div>
-    <div class="summary-card"><div class="summary-num">5</div><div class="summary-label">Vehicles</div></div>
-    <div class="summary-card"><div class="summary-num">3</div><div class="summary-label">Active Jobs</div></div>
-  </div>
-
-  <div class="filter-row">
-    <div class="filter-group">
-      <label>Filter by Vehicle</label>
-      <select id="filter-vehicle" onchange="filterRecords()">
-        <option value="">All Vehicles</option>
-        <option>Toyota Camry</option>
-        <option>Honda City</option>
-        <option>BMW 3 Series</option>
-        <option>Hyundai Creta</option>
-        <option>Maruti Swift</option>
-      </select>
+    <div class="container">
+        <h2 class="section-title">Medical Records</h2>
+        <div style="overflow-x: auto;">
+            <table class="records-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Record Type</th>
+                        <th>Doctor / Department</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>15 May 2026</td>
+                        <td>Blood Test (CBC)</td>
+                        <td>Pathology Lab</td>
+                        <td><span style="color: green; font-weight: 500;">Available</span></td>
+                        <td><button class="view-btn">View Report</button></td>
+                    </tr>
+                    <tr>
+                        <td>10 Apr 2026</td>
+                        <td>Chest X-Ray</td>
+                        <td>Radiology</td>
+                        <td><span style="color: green; font-weight: 500;">Available</span></td>
+                        <td><button class="view-btn">View Report</button></td>
+                    </tr>
+                    <tr>
+                        <td>02 Feb 2026</td>
+                        <td>Prescription</td>
+                        <td>Dr. Priya Sharma</td>
+                        <td><span style="color: green; font-weight: 500;">Available</span></td>
+                        <td><button class="view-btn">View Report</button></td>
+                    </tr>
+                    <tr>
+                        <td>01 Jun 2026</td>
+                        <td>MRI Scan</td>
+                        <td>Radiology</td>
+                        <td><span style="color: orange; font-weight: 500;">Pending</span></td>
+                        <td><button class="view-btn" disabled style="opacity: 0.5;">Processing</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="filter-group">
-      <label>Filter by Status</label>
-      <select id="filter-status" onchange="filterRecords()">
-        <option value="">All Status</option>
-        <option value="Completed">Completed</option>
-        <option value="In Progress">In Progress</option>
-        <option value="Pending">Pending</option>
-        <option value="Cancelled">Cancelled</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label>Search</label>
-      <input type="text" id="filter-search" placeholder="Service, tech, plate…" oninput="filterRecords()">
-    </div>
-  </div>
 
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Record ID</th>
-          <th>Date</th>
-          <th>Vehicle</th>
-          <th>Plate</th>
-          <th>Services</th>
-          <th>Technician</th>
-          <th>Total</th>
-          <th>Status</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="records-body">
-      </tbody>
-    </table>
-  </div>
-</main>
+    <script>
+        let isLoggedIn = localStorage.getItem('HealthCareLoggedIn') === 'true';
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-  <div class="modal" id="modal">
-    <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button>
-    <div id="modal-content"></div>
-  </div>
-</div>
+        // Route guard
+        if (!isLoggedIn) {
+            window.location.href = 'home.html?triggerLogin=true&redirect=records.html';
+        }
 
-<script>
-const RECORDS = [
-  { id:'AE-2025-0089', date:'29 May 2025', vehicle:'Toyota Camry', plate:'TN09 AB 1234', services:['Full Synthetic Oil Change','Air Filter Replacement'], tech:'Rajan M.', cost:1698, status:'Completed', notes:'Engine running smooth. Next oil change at 45,500 km.' },
-  { id:'AE-2025-0088', date:'26 May 2025', vehicle:'Honda City', plate:'TN07 CD 5678', services:['Brake Pad Replacement','Brake Fluid Flush'], tech:'Suresh K.', cost:3198, status:'Completed', notes:'Front and rear pads replaced. Fluid changed. Test drive confirmed.' },
-  { id:'AE-2025-0087', date:'28 May 2025', vehicle:'BMW 3 Series', plate:'TN01 EF 9012', services:['AC Recharge','OBD2 Full Scan'], tech:'Arjun P.', cost:1798, status:'In Progress', notes:'Refrigerant charged. Awaiting parts for minor compressor seal.' },
-  { id:'AE-2025-0086', date:'30 May 2025', vehicle:'Hyundai Creta', plate:'TN22 GH 3456', services:['Tire Rotation + Balance','4-Wheel Alignment'], tech:'Priya S.', cost:1798, status:'Pending', notes:'Vehicle received. Awaiting technician assignment.' },
-  { id:'AE-2025-0085', date:'22 May 2025', vehicle:'Maruti Swift', plate:'TN04 IJ 7890', services:['Basic Exterior Wash','Odor Elimination'], tech:'Kumar V.', cost:1898, status:'Completed', notes:'Full exterior wash and ozone odour treatment completed.' },
-  { id:'AE-2025-0084', date:'18 May 2025', vehicle:'Toyota Camry', plate:'TN09 AB 1234', services:['4-Wheel Alignment'], tech:'Rajan M.', cost:999, status:'Completed', notes:'Alignment corrected. Toe and camber adjusted to spec.' },
-  { id:'AE-2025-0083', date:'14 May 2025', vehicle:'Honda City', plate:'TN07 CD 5678', services:['Coolant Flush & Refill'], tech:'Suresh K.', cost:899, status:'Completed', notes:'Old coolant drained. Flushed with fresh 50/50 mix.' },
-  { id:'AE-2025-0082', date:'10 May 2025', vehicle:'BMW 3 Series', plate:'TN01 EF 9012', services:['Full Detail Package'], tech:'Arjun P.', cost:4999, status:'Completed', notes:'Full interior & exterior detail. Ceramic spray wax applied.' },
-  { id:'AE-2025-0081', date:'05 May 2025', vehicle:'Hyundai Creta', plate:'TN22 GH 3456', services:['Diesel Engine Oil Change','Air Filter Replacement'], tech:'Priya S.', cost:1998, status:'Completed', notes:'Diesel oil change. OEM air filter replaced.' },
-  { id:'AE-2025-0080', date:'28 Apr 2025', vehicle:'Maruti Swift', plate:'TN04 IJ 7890', services:['Battery Replacement'], tech:'Kumar V.', cost:3499, status:'Completed', notes:'Old battery at 45% capacity. New AGM 60Ah fitted.' },
-  { id:'AE-2025-0079', date:'20 Apr 2025', vehicle:'Toyota Camry', plate:'TN09 AB 1234', services:['Electrical System Check'], tech:'Rajan M.', cost:899, status:'Cancelled', notes:'Customer cancelled — no fault found at drop-off.' },
-  { id:'AE-2025-0078', date:'15 Apr 2025', vehicle:'Honda City', plate:'TN07 CD 5678', services:['Pre-Purchase Inspection'], tech:'Suresh K.', cost:1999, status:'Completed', notes:'150-point inspection passed. Minor dent on rear bumper noted.' },
-];
-
-function statusBadge(s) {
-  const map = { Completed:'badge-done', 'In Progress':'badge-progress', Pending:'badge-pending', Cancelled:'badge-cancelled' };
-  return `<span class="badge ${map[s]||''}">${s}</span>`;
-}
-
-function renderRecords(data) {
-  const tbody = document.getElementById('records-body');
-  tbody.innerHTML = data.map(r => `
-    <tr>
-      <td class="record-id">${r.id}</td>
-      <td>${r.date}</td>
-      <td class="car-cell">${r.vehicle}</td>
-      <td class="plate-cell">${r.plate}</td>
-      <td>${r.services.join('<br>')}</td>
-      <td>${r.tech}</td>
-      <td class="cost-cell">₹${r.cost.toLocaleString()}</td>
-      <td>${statusBadge(r.status)}</td>
-      <td><button class="btn-view" onclick='openModal(${JSON.stringify(r).replace(/'/g,"&#39;")})'>View</button></td>
-    </tr>
-  `).join('');
-}
-
-function filterRecords() {
-  const veh = document.getElementById('filter-vehicle').value.toLowerCase();
-  const stat = document.getElementById('filter-status').value;
-  const search = document.getElementById('filter-search').value.toLowerCase();
-  const filtered = RECORDS.filter(r => {
-    const matchVeh = !veh || r.vehicle.toLowerCase().includes(veh);
-    const matchStat = !stat || r.status === stat;
-    const matchSearch = !search || r.services.join(' ').toLowerCase().includes(search) || r.tech.toLowerCase().includes(search) || r.plate.toLowerCase().includes(search);
-    return matchVeh && matchStat && matchSearch;
-  });
-  renderRecords(filtered);
-}
-
-function openModal(r) {
-  const tax = Math.round(r.cost * 0.18 / 1.18);
-  document.getElementById('modal-content').innerHTML = `
-    <div class="modal-title">SERVICE REPORT</div>
-    <div class="modal-sub">${r.id}</div>
-    <div class="modal-row"><span class="modal-label">Date</span><span class="modal-value">${r.date}</span></div>
-    <div class="modal-row"><span class="modal-label">Vehicle</span><span class="modal-value">${r.vehicle}</span></div>
-    <div class="modal-row"><span class="modal-label">Plate</span><span class="modal-value">${r.plate}</span></div>
-    <div class="modal-row"><span class="modal-label">Technician</span><span class="modal-value">${r.tech}</span></div>
-    <div class="modal-row"><span class="modal-label">Status</span><span class="modal-value">${statusBadge(r.status)}</span></div>
-    <hr class="modal-divider">
-    <div class="modal-label" style="margin-bottom:12px;">Services Performed</div>
-    <div class="modal-items">
-      ${r.services.map(s => `<div class="modal-item"><span>${s}</span><span style="color:var(--gold)">Included</span></div>`).join('')}
-    </div>
-    <hr class="modal-divider">
-    <div class="modal-row"><span class="modal-label">Subtotal</span><span class="modal-value">₹${(r.cost - tax).toLocaleString()}</span></div>
-    <div class="modal-row"><span class="modal-label">GST</span><span class="modal-value">₹${tax.toLocaleString()}</span></div>
-    <div class="modal-total"><span class="modal-total-label">TOTAL</span><span class="modal-total-val">₹${r.cost.toLocaleString()}</span></div>
-    <hr class="modal-divider">
-    <div class="modal-row"><span class="modal-label">Notes</span><span class="modal-value">${r.notes}</span></div>
-  `;
-  document.getElementById('modal-overlay').classList.add('open');
-}
-
-function closeModal(e) {
-  if (e.target === document.getElementById('modal-overlay')) {
-    document.getElementById('modal-overlay').classList.remove('open');
-  }
-}
-
-function updateCartCount() {
-  const cart = JSON.parse(localStorage.getItem('ae_cart') || '[]');
-  document.getElementById('cart-count').textContent = cart.length;
-}
-
-renderRecords(RECORDS);
-updateCartCount();
-</script>
-
+        function handleLogoutClick() {
+            localStorage.removeItem('HealthCareLoggedIn');
+            window.location.href = 'home.html';
+        }
+    </script>
 </body>
+
 </html>

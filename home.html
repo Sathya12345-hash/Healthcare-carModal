@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="js/ResulSDK.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthCare - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #005A8D;
+            --secondary: #E35205;
+            --light-bg: #F4F7F6;
+            --text-dark: #333333;
+            --text-light: #777777;
+            --white: #FFFFFF;
+            --border: #E0E0E0;
+            --danger: #D32F2F;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+        }
+
+        /* HEADER */
+        header {
+            background: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--primary);
+        }
+
+        .emergency-btn {
+            background: var(--danger);
+            color: var(--white);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(211, 47, 47, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(211, 47, 47, 0);
+            }
+        }
+
+        /* CONTAINER */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), #003F63);
+            border-radius: 20px;
+            padding: 60px 40px;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+
+        .search-bar {
+            display: flex;
+            width: 100%;
+            max-width: 700px;
+            background: var(--white);
+            border-radius: 50px;
+            padding: 8px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 15px 25px;
+            font-size: 16px;
+            border-radius: 50px;
+        }
+
+        .search-bar button {
+            background: var(--secondary);
+            color: var(--white);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .search-bar button:hover {
+            background: #c24503;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--white);
+            width: 400px;
+            max-width: 90%;
+            margin: 100px auto;
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: slideDown 0.4s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .input-group {
+            display: flex;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .input-group span {
+            background: var(--light-bg);
+            padding: 15px;
+            color: var(--text-dark);
+            border-right: 1px solid var(--border);
+            font-weight: 600;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .btn-full {
+            width: 100%;
+            padding: 15px;
+            background: var(--secondary);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-full:hover {
+            background: #c24503;
+        }
+
+        #otpSection {
+            display: none;
+        }
+
+        .otp-inputs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .otp-inputs input {
+            width: 50px;
+            height: 50px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* DASHBOARD STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--primary);
+        }
+
+        .stat-card.orange {
+            border-color: var(--secondary);
+        }
+
+        .stat-card.red {
+            border-color: var(--danger);
+        }
+
+        .stat-card h4 {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .doctor-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .doc-header {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .doc-img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--light-bg);
+        }
+
+        .doc-info h3 {
+            color: var(--primary);
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .doc-info p {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 3px;
+        }
+
+        .doc-info .specialty {
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero {
+                padding: 40px 20px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .search-bar {
+                flex-direction: column;
+                border-radius: 15px;
+                background: transparent;
+                gap: 10px;
+            }
+
+            .search-bar input,
+            .search-bar button {
+                border-radius: 10px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='home.html'">HealthCare<span>.</span></div>
+        <nav>
+            <ul>
+                <li><a id="nav-home" class="active" href="home.html">Home</a></li>
+                <li><a id="nav-appointments" href="#"
+                        onclick="handleProtectedRoute(event, 'appointments.html')">Appointments</a></li>
+                <li><a id="nav-records" href="#" onclick="handleProtectedRoute(event, 'records.html')">Records</a></li>
+                <li><a id="nav-login" onclick="handleLoginClick()">Login</a></li>
+            </ul>
+            <button class="emergency-btn">🚨 Emergency 1068</button>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- GUEST HERO -->
+        <div id="guest-hero" class="hero">
+            <h1>World-Class Healthcare</h1>
+            <p>Book appointments, access your medical records, and consult with top doctors from the comfort of your
+                home.</p>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for doctors, specialties, or symptoms...">
+                <button>Search</button>
+            </div>
+        </div>
+
+        <!-- PATIENT DASHBOARD -->
+        <div id="patient-dashboard" style="display: none;">
+            <h2 class="section-title"
+                style="font-size: 28px; color: var(--primary); margin-bottom: 25px; border-bottom: 2px solid var(--border); padding-bottom: 10px;">
+                Welcome back, Patient!</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>Upcoming Appointments</h4>
+                    <div class="value">2</div>
+                </div>
+                <div class="stat-card orange">
+                    <h4>New Test Reports</h4>
+                    <div class="value">1</div>
+                </div>
+                <div class="stat-card red">
+                    <h4>Active Prescriptions</h4>
+                    <div class="value">3</div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 15px; color: var(--text-dark);">Recent Activity</h3>
+            <div class="doctor-card" style="margin-bottom: 20px;">
+                <div class="doc-header" style="margin-bottom: 0;">
+                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=100&h=100"
+                        class="doc-img">
+                    <div class="doc-info">
+                        <h3>Dr. Rajesh Kumar</h3>
+                        <p class="specialty">Cardiology</p>
+                        <p style="color: green; font-weight: bold; margin-top: 5px;">Confirmed for Tomorrow, 10:00
+                            AM</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN MODAL -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLoginModal()">&times;</span>
+            <h2>Login to HealthCare</h2>
+
+            <div id="mobileSection">
+                <p style="text-align: center; color: var(--text-light); margin-bottom: 20px;">Enter your mobile number
+                    to proceed</p>
+                <div class="input-group">
+                    <span>+91</span>
+                    <input type="tel" id="mobileNumber" maxlength="10" placeholder="Mobile Number" inputmode="numeric"
+                        oninput="restrictNumeric(this)">
+                </div>
+                <button class="btn-full" onclick="sendOTP()">Get OTP</button>
+            </div>
+
+            <div id="otpSection">
+                <p style="text-align: center; color: var(--text-light); margin-bottom: 20px;">Enter the 4-digit OTP sent
+                    to <br><b id="displayMobile" style="color: var(--text-dark);"></b></p>
+                <div class="otp-inputs">
+                    <input type="text" id="otp1" maxlength="1" inputmode="numeric" oninput="restrictNumeric(this)"
+                        onkeyup="moveToNext(this, 'otp2')">
+                    <input type="text" id="otp2" maxlength="1" inputmode="numeric" oninput="restrictNumeric(this)"
+                        onkeyup="moveToNext(this, 'otp3')">
+                    <input type="text" id="otp3" maxlength="1" inputmode="numeric" oninput="restrictNumeric(this)"
+                        onkeyup="moveToNext(this, 'otp4')">
+                    <input type="text" id="otp4" maxlength="1" inputmode="numeric" oninput="restrictNumeric(this)">
+                </div>
+                <button class="btn-full" onclick="verifyOTP()">Verify & Login</button>
+                <p
+                    style="text-align: center; margin-top: 15px; font-size: 14px; color: var(--primary); cursor: pointer;">
+                    Resend OTP</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isLoggedIn = localStorage.getItem('HealthCareLoggedIn') === 'true';
+
+        window.onload = function () {
+            updateLoginUI();
+
+            // Check if redirect triggered login modal
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('triggerLogin') === 'true') {
+                showLoginModal();
+            }
+        };
+
+        function updateLoginUI() {
+            if (isLoggedIn) {
+                document.getElementById('nav-login').innerText = 'Logout';
+                document.getElementById('guest-hero').style.display = 'none';
+                document.getElementById('patient-dashboard').style.display = 'block';
+            } else {
+                document.getElementById('nav-login').innerText = 'Login';
+                document.getElementById('guest-hero').style.display = 'flex';
+                document.getElementById('patient-dashboard').style.display = 'none';
+            }
+        }
+
+        function handleLoginClick() {
+            if (isLoggedIn) {
+                isLoggedIn = false;
+                localStorage.removeItem('HealthCareLoggedIn');
+                updateLoginUI();
+            } else {
+                showLoginModal();
+            }
+        }
+
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+            document.getElementById('mobileSection').style.display = 'block';
+            document.getElementById('otpSection').style.display = 'none';
+            document.getElementById('mobileNumber').value = '';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function restrictNumeric(element) {
+            element.value = element.value.replace(/[^0-9]/g, '');
+        }
+
+        function sendOTP() {
+            const mobile = document.getElementById('mobileNumber').value.trim();
+            if (mobile.length === 10 && /^\d{10}$/.test(mobile)) {
+                document.getElementById('displayMobile').innerText = '+91 ' + mobile;
+                document.getElementById('mobileSection').style.display = 'none';
+                document.getElementById('otpSection').style.display = 'block';
+
+                ['otp1', 'otp2', 'otp3', 'otp4'].forEach(function (id) {
+                    document.getElementById(id).value = '';
+                });
+                document.getElementById('otp1').focus();
+            } else {
+                alert('Please enter a valid 10-digit mobile number.');
+            }
+        }
+
+        function moveToNext(current, nextFieldID) {
+            if (current.value.length >= 1 && nextFieldID) {
+                document.getElementById(nextFieldID).focus();
+            }
+        }
+
+        function verifyOTP() {
+            const digit1 = document.getElementById('otp1').value;
+            const digit2 = document.getElementById('otp2').value;
+            const digit3 = document.getElementById('otp3').value;
+            const digit4 = document.getElementById('otp4').value;
+            const enteredOTP = digit1 + digit2 + digit3 + digit4;
+
+            if (enteredOTP.length !== 4) {
+                alert('Please enter all 4 digits of the OTP.');
+                return;
+            }
+
+            isLoggedIn = true;
+            localStorage.setItem('HealthCareLoggedIn', 'true');
+            closeLoginModal();
+            updateLoginUI();
+            alert('Login successful! Welcome to HealthCare Portal.');
+
+            // Check for redirect param
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectUrl = urlParams.get('redirect');
+
+            if (redirectUrl) {
+                const url = new URL(window.location);
+                url.searchParams.delete('redirect');
+                window.history.replaceState({}, '', url);
+
+                window.location.href = redirectUrl;
+            }
+        }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('loginModal');
+            if (event.target == modal) {
+                closeLoginModal();
+            }
+        }
+
+        function handleProtectedRoute(event, targetPage) {
+            event.preventDefault();
+
+            if (isLoggedIn) {
+                window.location.href = targetPage;
+                return;
+            }
+
+            showLoginModal();
+
+            // Store redirect page
+            const url = new URL(window.location);
+            url.searchParams.set('redirect', targetPage);
+            window.history.replaceState({}, '', url);
+        }
+    </script>
+</body>
+
+</html>
