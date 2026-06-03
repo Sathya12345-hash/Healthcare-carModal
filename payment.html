@@ -302,9 +302,12 @@
         }
 
         @keyframes scale-anim {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: none;
             }
+
             50% {
                 transform: scale3d(1.1, 1.1, 1);
             }
@@ -349,30 +352,35 @@
     <div class="container">
         <div class="payment-box">
             <h2>Appointment Payment</h2>
-            
+
             <div class="payment-summary">
                 <p>Doctor: <span id="payDocName" class="doc-name">-</span></p>
                 <p>Time Slot: <span id="paySlot" style="font-weight: 600;">-</span></p>
-                <p style="margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px;">Consultation Fee: <span class="price">₹800</span></p>
+                <p style="margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px;">Consultation Fee:
+                    <span class="price">₹800</span></p>
             </div>
 
             <p style="margin-bottom: 10px; font-weight: 600; color: var(--text-dark);">Choose Payment Method:</p>
             <div class="payment-methods">
-                <button id="btn-pay-card" class="pay-method-btn active" onclick="switchPaymentMethod('card')">Debit/Credit Card</button>
+                <button id="btn-pay-card" class="pay-method-btn active"
+                    onclick="switchPaymentMethod('card')">Debit/Credit Card</button>
                 <button id="btn-pay-upi" class="pay-method-btn" onclick="switchPaymentMethod('upi')">UPI</button>
             </div>
 
             <!-- Card Payment Content -->
             <div id="pay-content-card" class="payment-tab-content active">
                 <div class="input-group" style="margin-bottom: 15px;">
-                    <input type="text" id="cardNum" placeholder="Card Number (16 digits)" maxlength="19" oninput="formatCardNumber(this)">
+                    <input type="text" id="cardNum" placeholder="Card Number (16 digits)" maxlength="19"
+                        oninput="formatCardNumber(this)">
                 </div>
                 <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                     <div class="input-group" style="margin-bottom: 0; flex: 1;">
-                        <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)">
+                        <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5"
+                            oninput="formatExpiry(this)">
                     </div>
                     <div class="input-group" style="margin-bottom: 0; flex: 1;">
-                        <input type="password" id="cardCvv" placeholder="CVV" maxlength="3" oninput="restrictNumeric(this)">
+                        <input type="password" id="cardCvv" placeholder="CVV" maxlength="3"
+                            oninput="restrictNumeric(this)">
                     </div>
                 </div>
             </div>
@@ -382,9 +390,12 @@
                 <div class="input-group" style="margin-bottom: 15px;">
                     <input type="text" id="upiId" placeholder="username@upi">
                 </div>
-                <p style="font-size: 13px; color: var(--text-light); text-align: center; margin-bottom: 15px;">Or scan the QR code using your UPI app</p>
+                <p style="font-size: 13px; color: var(--text-light); text-align: center; margin-bottom: 15px;">Or scan
+                    the QR code using your UPI app</p>
                 <div style="text-align: center; margin-bottom: 20px;">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=healthcare@okaxis%26pn=HealthCare%26am=800.00%26cu=INR" alt="QR Code" style="border: 1px solid var(--border); padding: 5px; border-radius: 5px; width: 120px;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=healthcare@okaxis%26pn=HealthCare%26am=800.00%26cu=INR"
+                        alt="QR Code"
+                        style="border: 1px solid var(--border); padding: 5px; border-radius: 5px; width: 120px;">
                 </div>
             </div>
 
@@ -397,13 +408,16 @@
         <div class="modal-content" style="text-align: center;">
             <div class="success-checkmark">
                 <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
                 </svg>
             </div>
             <h2 style="color: #7ac142; margin-bottom: 15px;">Booking Confirmed!</h2>
             <p style="color: var(--text-dark); margin-bottom: 10px; font-weight: 500;">Thank you for your payment.</p>
-            <p style="color: var(--text-light); margin-bottom: 25px; line-height: 1.5;">Your appointment with <span id="thankDocName" style="color: var(--primary); font-weight: 600;">-</span> on slot <span id="thankSlot" style="color: var(--text-dark); font-weight: 600;">-</span> is scheduled successfully.</p>
+            <p style="color: var(--text-light); margin-bottom: 25px; line-height: 1.5;">Your appointment with <span
+                    id="thankDocName" style="color: var(--primary); font-weight: 600;">-</span> on slot <span
+                    id="thankSlot" style="color: var(--text-dark); font-weight: 600;">-</span> is scheduled
+                successfully.</p>
             <button class="btn-full" onclick="closeThankYouModal()">Done</button>
         </div>
     </div>
@@ -474,7 +488,10 @@
         }
 
         function processPayment() {
-            const activeMethod = document.getElementById('btn-pay-card').classList.contains('active') ? 'card' : 'upi';
+            const activeMethod = document.getElementById('btn-pay-card').classList.contains('active')
+                ? 'card'
+                : 'upi';
+
             if (activeMethod === 'card') {
                 const cardNum = document.getElementById('cardNum').value.replace(/\s/g, '');
                 const expiry = document.getElementById('cardExpiry').value;
@@ -484,27 +501,97 @@
                     alert('Please enter a valid 16-digit card number.');
                     return;
                 }
+
                 if (!/^\d{2}\/\d{2}$/.test(expiry)) {
                     alert('Please enter a valid expiry date (MM/YY).');
                     return;
                 }
+
                 if (cvv.length !== 3) {
                     alert('Please enter a valid 3-digit CVV.');
                     return;
                 }
             } else {
                 const upiId = document.getElementById('upiId').value.trim();
+
                 if (!upiId || !upiId.includes('@')) {
                     alert('Please enter a valid UPI ID.');
                     return;
                 }
             }
 
-            document.getElementById('thankDocName').innerText = docName;
-            document.getElementById('thankSlot').innerText = slot;
-            document.getElementById('thankYouModal').style.display = 'block';
-        }
+            const paymentBox = document.querySelector('.payment-box');
 
+            // Loader
+            paymentBox.innerHTML = `
+        <div style="text-align:center;padding:50px 20px;">
+            <div style="
+                width:60px;
+                height:60px;
+                margin:auto;
+                border:5px solid #e0e0e0;
+                border-top:5px solid #005A8D;
+                border-radius:50%;
+                animation:spin 1s linear infinite;
+            "></div>
+
+            <h2 style="margin-top:20px;color:#005A8D;">
+                Processing Payment...
+            </h2>
+
+            <p style="margin-top:10px;color:#777;">
+                Please wait while we confirm your appointment.
+            </p>
+        </div>
+    `;
+
+            // Add animation if not already added
+            if (!document.getElementById('spin-style')) {
+                const style = document.createElement('style');
+                style.id = 'spin-style';
+                style.innerHTML = `
+            @keyframes spin {
+                100% { transform: rotate(360deg); }
+            }
+        `;
+                document.head.appendChild(style);
+            }
+
+            setTimeout(() => {
+                paymentBox.innerHTML = `
+            <div style="text-align:center;">
+
+                <div class="success-checkmark">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                </div>
+
+                <h2 style="color:#7ac142;margin-bottom:15px;">
+                    Booking Confirmed!
+                </h2>
+
+                <p style="margin-bottom:10px;font-weight:500;">
+                    Thank you for your payment.
+                </p>
+
+                <p style="margin-bottom:25px;line-height:1.6;">
+                    Your appointment with
+                    <strong style="color:#005A8D;">${docName}</strong>
+                    on slot
+                    <strong>${slot}</strong>
+                    has been scheduled successfully.
+                </p>
+
+                <button class="btn-full" onclick="window.location.href='home.html'">
+                    Go To Home
+                </button>
+
+            </div>
+        `;
+            }, 3000);
+        }
         function closeThankYouModal() {
             document.getElementById('thankYouModal').style.display = 'none';
             window.location.href = 'home.html';
