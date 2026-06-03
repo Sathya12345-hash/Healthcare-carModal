@@ -720,10 +720,6 @@
                         <div class="slot" onclick="selectSlot(this)">02:00 PM</div>
                         <div class="slot" onclick="selectSlot(this)">04:30 PM</div>
                     </div>
-                    <div class="date-selection-container" style="display: none; margin-bottom: 15px;">
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-light); margin-bottom: 5px;">Select Appointment Date:</label>
-                        <input type="date" class="appt-date-input" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; transition: border 0.3s;" onclick="event.stopPropagation()">
-                    </div>
                     <button class="book-btn" onclick="bookAppointment('Dr. Rajesh Kumar')">Book Appointment</button>
                 </div>
 
@@ -745,10 +741,6 @@
                         <div class="slot" onclick="selectSlot(this)">03:00 PM</div>
                         <div class="slot" onclick="selectSlot(this)">04:00 PM</div>
                         <div class="slot" onclick="selectSlot(this)">05:30 PM</div>
-                    </div>
-                    <div class="date-selection-container" style="display: none; margin-bottom: 15px;">
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-light); margin-bottom: 5px;">Select Appointment Date:</label>
-                        <input type="date" class="appt-date-input" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; transition: border 0.3s;" onclick="event.stopPropagation()">
                     </div>
                     <button class="book-btn" onclick="bookAppointment('Dr. Priya Sharma')">Book Appointment</button>
                 </div>
@@ -772,10 +764,6 @@
                         <div class="slot" onclick="selectSlot(this)">02:30 PM</div>
                         <div class="slot" onclick="selectSlot(this)">06:00 PM</div>
                     </div>
-                    <div class="date-selection-container" style="display: none; margin-bottom: 15px;">
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-light); margin-bottom: 5px;">Select Appointment Date:</label>
-                        <input type="date" class="appt-date-input" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; transition: border 0.3s;" onclick="event.stopPropagation()">
-                    </div>
                     <button class="book-btn" onclick="bookAppointment('Dr. Arun Menon')">Book Appointment</button>
                 </div>
 
@@ -798,10 +786,6 @@
                         <div class="slot" onclick="selectSlot(this)">03:15 PM</div>
                         <div class="slot" onclick="selectSlot(this)">05:00 PM</div>
                     </div>
-                    <div class="date-selection-container" style="display: none; margin-bottom: 15px;">
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-light); margin-bottom: 5px;">Select Appointment Date:</label>
-                        <input type="date" class="appt-date-input" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; transition: border 0.3s;" onclick="event.stopPropagation()">
-                    </div>
                     <button class="book-btn" onclick="bookAppointment('Dr. Meena Reddy')">Book Appointment</button>
                 </div>
 
@@ -823,10 +807,6 @@
                         <div class="slot" onclick="selectSlot(this)">01:30 PM</div>
                         <div class="slot" onclick="selectSlot(this)">04:00 PM</div>
                         <div class="slot" onclick="selectSlot(this)">06:30 PM</div>
-                    </div>
-                    <div class="date-selection-container" style="display: none; margin-bottom: 15px;">
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-light); margin-bottom: 5px;">Select Appointment Date:</label>
-                        <input type="date" class="appt-date-input" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; transition: border 0.3s;" onclick="event.stopPropagation()">
                     </div>
                     <button class="book-btn" onclick="bookAppointment('Dr. Vikram Singh')">Book Appointment</button>
                 </div>
@@ -928,7 +908,6 @@
             
             <div class="payment-summary">
                 <p>Doctor: <span id="payDocName" class="doc-name">-</span></p>
-                <p>Date: <span id="payDate" style="font-weight: 600;">-</span></p>
                 <p>Time Slot: <span id="paySlot" style="font-weight: 600;">-</span></p>
                 <p style="margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px;">Consultation Fee: <span class="price">₹800</span></p>
             </div>
@@ -980,7 +959,7 @@
             </div>
             <h2 style="color: #7ac142; margin-bottom: 15px;">Booking Confirmed!</h2>
             <p style="color: var(--text-dark); margin-bottom: 10px; font-weight: 500;">Thank you for your payment.</p>
-            <p style="color: var(--text-light); margin-bottom: 25px; line-height: 1.5;">Your appointment with <span id="thankDocName" style="color: var(--primary); font-weight: 600;">-</span> on <span id="thankDate" style="color: var(--text-dark); font-weight: 600;">-</span> at <span id="thankSlot" style="color: var(--text-dark); font-weight: 600;">-</span> is scheduled successfully.</p>
+            <p style="color: var(--text-light); margin-bottom: 25px; line-height: 1.5;">Your appointment with <span id="thankDocName" style="color: var(--primary); font-weight: 600;">-</span> on slot <span id="thankSlot" style="color: var(--text-dark); font-weight: 600;">-</span> is scheduled successfully.</p>
             <button class="btn-full" onclick="closeThankYouModal()">Done</button>
         </div>
     </div>
@@ -1099,35 +1078,11 @@
                 siblings[i].classList.remove('selected');
             }
             element.classList.add('selected');
-
-            // Show date selection container for this doctor card
-            const docCard = element.closest('.doctor-card');
-            const dateContainer = docCard.querySelector('.date-selection-container');
-            if (dateContainer) {
-                dateContainer.style.display = 'block';
-                // Set default date to tomorrow's date
-                const dateInput = dateContainer.querySelector('.appt-date-input');
-                if (dateInput && !dateInput.value) {
-                    const tomorrow = new Date();
-                    tomorrow.setDate(tomorrow.getDate() + 1);
-                    const yyyy = tomorrow.getFullYear();
-                    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
-                    const dd = String(tomorrow.getDate()).padStart(2, '0');
-                    dateInput.value = `${yyyy}-${mm}-${dd}`;
-                    // Set min date to today
-                    const today = new Date();
-                    const t_yyyy = today.getFullYear();
-                    const t_mm = String(today.getMonth() + 1).padStart(2, '0');
-                    const t_dd = String(today.getDate()).padStart(2, '0');
-                    dateInput.min = `${t_yyyy}-${t_mm}-${t_dd}`;
-                }
-            }
         }
 
         let currentBooking = {
             docName: '',
-            slot: '',
-            date: ''
+            slot: ''
         };
 
         function bookAppointment(docName) {
@@ -1139,17 +1094,12 @@
             // Find the doctor card that matches this doctor's name
             const cards = document.querySelectorAll('.doctor-card');
             let selectedSlotText = '';
-            let selectedDateText = '';
             cards.forEach(card => {
                 const headerName = card.querySelector('.doc-info h3');
                 if (headerName && headerName.innerText.trim() === docName) {
                     const selectedSlot = card.querySelector('.slot.selected');
                     if (selectedSlot) {
                         selectedSlotText = selectedSlot.innerText;
-                        const dateInput = card.querySelector('.appt-date-input');
-                        if (dateInput) {
-                            selectedDateText = dateInput.value;
-                        }
                     }
                 }
             });
@@ -1159,22 +1109,15 @@
                 return;
             }
 
-            if (!selectedDateText) {
-                alert('Please select a valid date for your appointment.');
-                return;
-            }
-
             currentBooking.docName = docName;
             currentBooking.slot = selectedSlotText;
-            currentBooking.date = selectedDateText;
 
             // Open Payment Modal
-            showPaymentModal(docName, selectedDateText, selectedSlotText);
+            showPaymentModal(docName, selectedSlotText);
         }
 
-        function showPaymentModal(docName, date, slot) {
+        function showPaymentModal(docName, slot) {
             document.getElementById('payDocName').innerText = docName;
-            document.getElementById('payDate').innerText = date;
             document.getElementById('paySlot').innerText = slot;
             document.getElementById('paymentModal').style.display = 'block';
             switchPaymentMethod('card');
@@ -1256,7 +1199,6 @@
             closePaymentModal();
             
             document.getElementById('thankDocName').innerText = currentBooking.docName;
-            document.getElementById('thankDate').innerText = currentBooking.date;
             document.getElementById('thankSlot').innerText = currentBooking.slot;
             
             document.getElementById('thankYouModal').style.display = 'block';
